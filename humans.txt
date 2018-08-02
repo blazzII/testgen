@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Mark Chmieleski -- Project Author, Lead, Designer Developer -- @
+    Jason Blazzard -- Web Developer
+
+# THANKS
+
+    <name>
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5, PHP, ES6, Modernizr, Normalize.css

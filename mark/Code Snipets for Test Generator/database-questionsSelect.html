@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Test Question Database</title>
+</head>
+
+<body>
+<form action="questionSelect.php" method="post">
+<h3>Enter your question here</h3>
+<label for="table">Select Topic</label>
+<select id="table" name="table">
+	<option name="part_61" value="part_61">Part 61</option>
+    <option name="part_91" value="part_91">Part 91</option>
+    <option name="gom" value="gom">GOM</option>
+    <option name="airspace" value="airspace">Airspace</option>
+</select>
+<label for="question">Quesiton:</label>
+<textarea id="quesiton" name="question"></textarea>
+
+<h3>Enter the answer to your question here</h3>
+<label for="answer">Answer:</label>
+<textarea id="answer" name="answer"></textarea>
+
+<input type="submit" name="submit" value="Add" />
+
+</form>
+
+
+
+</body>
+</html>
