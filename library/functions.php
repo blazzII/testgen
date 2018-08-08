@@ -1,28 +1,37 @@
 <?php 
 
-    function buildCategoryList($categories) {
-        // page level?
-        $navList = '<ul>';
-        $navList .= "<li class=\"icon\"><a href=\"javascript:void(0);\" onclick=\"myFunction()\"><i class=\"fa fa-bars\"></i></a></li>";
-        $navList .= "<li><a href='/' title='View the Acme home page'>Home</a></li>";
-        foreach ($categories as $category) {
-            $navList .= "<li><a href='/products/index.php?action=category&type=".urlencode($category['categoryName'])."' title='View our $category[categoryName] product line'>$category[categoryName]</a></li>";
-        }
-        $navList .= '</ul>';
-        $navList .= '<script>function myFunction() {';
-        $navList .= '   var x = document.getElementById("siteNav");';
-        $navList .= '    if (x.className === "siteNav") {';
-        $navList .= '        x.className += "_responsive";';
-        $navList .= '    } else {';
-        $navList .= '        x.className = "siteNav"; } }';
-        $navList .= '</script>';
-        return $navList;
+function buildCatList() {
+    $categories = getAllCategories();
+    $catDataList = '<datalist>';
+    foreach ($categories as $category) {
+        $catDataList .= '<option value="' . $category['catID'] . '">' . $category['catName'] . '</option>';
     }
+    $catDataList .= '</datalist>';
+    return $catDataList;
+}
 
-    function checkEmail($clientEmail){
-        $valEmail = filter_var($clientEmail, FILTER_VALIDATE_EMAIL);
-        return $valEmail;
+function buildFormItemCategories() {
+    $numOfValues = 5;
+    $categories = getAllCategories();
+    $formItems = "";
+    foreach ($categories as $category) 
+    {
+        $formItems .= '<div class="formitem">';
+        $formItems .= '<span class="formitemlabel">' . htmlspecialchars($category['catName']) . '</span>';
+        $formItems .= '<select name="' . $category['catID'] . '">';
+        for ( $i = 0; $i <= $numOfValues; $i++) {
+            $formItems .= '<option value="' . $i . '">' . $i . '</option>';
+        }
+        $formItems .= '</select>';
+        $formItems .= '</div>';
     }
+    return $formItems;
+}
+
+function checkEmail($clientEmail) {
+    $valEmail = filter_var($clientEmail, FILTER_VALIDATE_EMAIL);
+    return $valEmail;
+}
 
     // Check the password for a minimum of 8 characters,
     // at least one 1 capital letter, at least 1 number and

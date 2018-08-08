@@ -18,18 +18,18 @@ body {
     display: table-cell;
     background-color: white;
     vertical-align: middle;
-    /* font-family: 'Gamja Flower', cursive; */
-    font-family: sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .flex-container {
-    max-width: 736px;
+    max-width: 767px;
     margin: 0 auto;
     display: flex;
     flex-flow: row wrap;    
     align-items: center;
     background-color: #eee;
     box-shadow: 0 0 30px #777;
+    border-radius: 7px;
 }
 
 a {
@@ -42,27 +42,26 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    text-shadow: 2px 2px 2px #777;
+    text-shadow: 2px 2px 2px #bbb;
+    text-align: center;
 }
 
 h1 {
     font-size: 2rem;
-    
     margin: 0;
 }
 
 h2 {
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 2px;
+    font-size: 1.75rem;
+    padding: 1.5px;
+    letter-spacing: .1rem;
     /*background: radial-gradient(circle, #3377aa, #fff);*/
-    color: #aaa;
+    color: #333;
     margin: 0;
 }
 
 h3 {
     font-size: 1.4rem;
-    text-align: center;
     text-shadow: 2px 2px 2px #444;
     padding: 4px;
     background: radial-gradient(circle, #444, #fff);
@@ -75,19 +74,11 @@ a:visited {
 
 header {
     flex: 1 1 100%;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: center;
     background-color: rgba(100, 150, 200, .5);
     color: #000;
-    margin: 3px;
     padding: 10px;
-}
-
-header > div {
-    flex: auto;
-    text-align: center;
+    border-radius: 7px 7px 0 0;
 }
 
 main {
@@ -98,19 +89,46 @@ main {
 }
 
 form {
-    border:1px dashed purple;
-    padding: 7px;
+    padding: 0 7px 7px 7px;
+}
+
+form > p {
+    margin: 0;
 }
 
 input {
     padding: 7px;
     font-size: 1.5rem;
+    margin: 3px;
 }
 
+input[type="submit"] {
+    padding-left: 25px;
+    padding-right: 25px;
+    float: right;
+}
+
+input[type="submit"]:hover {
+    border-color: green;
+    box-shadow: 0 0 7px #444;
+}
+
+input.smallerFont{
+    font-size: 1rem;
+}
+
+  .formitem label {
+    width: 200px;
+    text-align: right;
+  }
+
 footer {
+    clear: both;
     margin: 10px auto;
     flex: 1 1 100%;
     text-align: center;
+    font-size: .85rem;
+    letter-spacing: .20rem;
 }
 
 footer hr {
@@ -124,9 +142,34 @@ footer hr {
     font-size: larger;
 }
 
-.msgDisplay {
-    margin: 5px;
-    padding: 7px;
-    border: 1px solid #ccc;
-    background-color: rgba(255,200,200, 1);
+.accountArea {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.msg {
+    maring: 5px;
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid rgba(27,31,35,0.15);
+}
+
+.warn {
+    background-color: rgba(255,200,200,1);
+    color: rgba(135,30,30,1);
+}
+
+.good {
+    background-color: rgba(200,255,200,1);
+    color: rgba(30,135,30,1);
+}
+
+.info {
+    background-color: rgba(200, 200, 255,1);
+    color: rgba(30,30,135,1);
+}
+
+.menubutton {
+    width: 250px;
 }

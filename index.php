@@ -11,5 +11,5 @@ $action = filter_input(INPUT_POST, 'action');
           break;
 
       default:
-          include 'views/mainmenu.php';
+          include 'views/main-menu.php';
   }

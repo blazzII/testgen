@@ -125,15 +125,15 @@ switch ($action) {
 
     case 'myAccount':
         $pageTitle = 'My Account';
-        include '../views/admin.php';
+        include '../views/account-menu.php';
         exit;
 
     case 'updateAccount':
         $pageTitle = 'Account Update';
-        include '../views/updateAccount.php';
+        include '../views/account-update.php';
         break;
 
-    case 'updateProfileSubmit';
+    case 'updateAccountSubmit';
         // Filter and store the data
         $accountFirstName = filter_input(INPUT_POST, 'accountFirstname', FILTER_SANITIZE_STRING);
         $accountLastname = filter_input(INPUT_POST, 'accountLastname', FILTER_SANITIZE_STRING);
