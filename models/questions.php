@@ -18,9 +18,9 @@
         return $rowsChanged;
     }
 
-    function getQuestionDetails($qID) {
+    function getQuestionByID($qID) {
         $db = testgenConnect();
-        $sql = 'SELECT qQuestion, catID, qAnswerKey, qReference FROM question as q INNER JOIN  category as cat ON cat.catID = q.catID WHERE qID = :qID';
+        $sql = 'SELECT qID, qQuestion, catName, qAnswerKey, qReference, qActive FROM question as q INNER JOIN category as cat ON cat.catID = q.catID WHERE qID = :qID';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':qID', $qID, PDO::PARAM_INT);
         $stmt->execute();
@@ -45,23 +45,36 @@
         return $rowsChanged;
     }
 
-    function deleteQuestion($qID) {
+    // do we really need this ... active field is needed versus delete.
+    function toggleQuestionActiveState($qID) {
         $db = testgenConnect();
-        $sql = 'DELETE FROM question WHERE qID = :qID';
+        $sql = 'SELECT qActive FROM question WHERE qID = :qID';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':qID', $qID, PDO::PARAM_INT);
         $stmt->execute();
 
-        $rowsChanged = $stmt->rowCount();
+        $qState = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        return $rowsChanged;
+        return $qState;
     }
 
-    function getQuestionsByCategory($catName){
+    function getAllQuestions() {
         $db = testgenConnect();
-        $sql = 'SELECT * FROM question WHERE catID IN (SELECT catID FROM category WHERE catName = :catName)';
+        $sql = 'SELECT c.catName, q.qQuestion, q.qID, q.qActive FROM question AS q INNER JOIN category AS c ON q.catID = c.catID';
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':catName', $catName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $questions;
+    }
+
+    function getQuestionsByCategory($catID){
+        $db = testgenConnect();
+        //$sql = 'SELECT * FROM question WHERE catID IN (SELECT catID FROM category WHERE catName = :catName)';
+        $sql = 'SELECT c.catName, q.qQuestion, q.qID, q.qActive FROM question AS q INNER JOIN category AS c ON q.catID = c.catID WHERE q.catID = :catID';
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':catID', $catID, PDO::PARAM_STR);
         $stmt->execute();
 
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);

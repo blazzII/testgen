@@ -8,11 +8,25 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
       <main>
+        <h2>Main Menu</h2>
         <?php 
           if (isset($_SESSION['message'])) echo $_SESSION['message'];
           if (isset($message)) echo $message;    
         ?>
-        <hr>
+        
+        <?php
+          if (isset($_SESSION['accountData'])) 
+            if ($_SESSION['accountData']['accLevel'] > 2) { 
+        ?>
+            <section>
+              <form action="accounts/" method="post">
+                <input class="menubutton" type="submit" value="Administer Accounts">
+                <input type="hidden" name="action" value="accountAdminView">
+              </form>
+            </section>
+        <?php
+           }      
+        ?>
         <section>
           <form action="tests/" method="post">
             <input class="menubutton" type="submit" value="Create New Test">
@@ -22,25 +36,8 @@
         <section>
           <form action="tests/" method="post">
             <input class="menubutton" type="submit" value="Take a Test">
-            <input type="hidden" name="action" value="testSelectView">
+            <input type="hidden" name="action" value="takeTestLoginView">
           </form>
-        </section>
-        <hr>
-        <section>
-          <?php 
-            if (isset($_SESSION['loggedin'])) { ?>
-              <form action="accounts/" method="post">
-                <input class="menubutton" type="submit" value="Logout">
-                <input type="hidden" name="action" value="logout">
-              </form>
-          <?php 
-            } else { ?>
-                <form action="accounts/" method="post">
-                  <input class="menubutton" type="submit" value="Login">
-                  <input type="hidden" name="action" value="loginView">
-              </form>
-          <?php
-            } ?>  
         </section>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>

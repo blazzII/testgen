@@ -3,7 +3,7 @@
 
 function register($accountFirstname, $accountLastname, $accountEmail, $accountPassword) {
     $db = testgenConnect();
-    $sql = 'INSERT INTO account (accountFirstName, accountLastName, accountEmail, accountPassword, accountLevel)
+    $sql = 'INSERT INTO account (accFirstName, accLastName, accEmail, accPassword, accLevel)
         VALUES (:accountFirstname, :accountLastname, :accountEmail, :accountPassword, 1)';
     $stmt = $db->prepare($sql);
 
@@ -13,15 +13,15 @@ function register($accountFirstname, $accountLastname, $accountEmail, $accountPa
     $stmt->bindValue(':accountPassword', $accountPassword, PDO::PARAM_STR);
     
     $stmt->execute();
-    $rowsChanged = $stmt->rowCount();  // validation check (1 INSERT INTO)
+    $accID = $db->lastInsertId(); 
     $stmt->closeCursor();
-    return $rowsChanged;
-   }
+    return $accID;
+}
 
 // Check for an existing email address
 function checkExistingEmail($accountEmail) {
     $db = testgenConnect();
-    $sql = 'SELECT accountEmail FROM account WHERE accountEmail = :email';
+    $sql = 'SELECT accEmail FROM account WHERE accEmail = :email';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':email', $accountEmail, PDO::PARAM_STR);
     $stmt->execute();
@@ -33,28 +33,24 @@ function checkExistingEmail($accountEmail) {
     } else {
      return 1;
     }
-   }
+}
 
 // Get account information based on an email address
 function getAccountByEmail($accountEmail){
     $db = testgenConnect();
-    $sql = 'SELECT accountID, accountFirstName, accountLastName, accountEmail, accountLevel, accountPassword 
-            FROM account
-            WHERE accountEmail = :email';
+    $sql = 'SELECT * FROM account WHERE accEmail = :email';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':email', $accountEmail, PDO::PARAM_STR);
     $stmt->execute();
     $accountData = $stmt->fetch(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
     return $accountData;
-   } 
+} 
 
 // Get account data based on accountId
 function getAccountById($accountId){
     $db = testgenConnect();
-    $sql = 'SELECT accountID, accountFirstName, accountLastName, accountEmail, accountLevel, accountPassword 
-            FROM account
-            WHERE accountID = :accountID';
+    $sql = 'SELECT * FROM account WHERE accID = :accountID';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':accountID', $accountID, PDO::PARAM_INT);
     $stmt->execute();
@@ -65,7 +61,7 @@ function getAccountById($accountId){
 
 function updateAccountProfile($accountFirstname, $accountLastname, $accountEmail, $accountID){
     $db = testgenConnect();
-    $sql = 'UPDATE account SET accountFirstname = :accountFirstname, accountLastname = :accountLastname, accountEmail = :accountEmail WHERE accountId = :accountId';
+    $sql = 'UPDATE account SET accFirstname = :accountFirstname, accLastname = :accountLastname, accEmail = :accountEmail WHERE accID = :accountId';
     $stmt = $db->prepare($sql);
 
     $stmt->bindValue(':accountFirstname', $accountFirstname, PDO::PARAM_STR);
@@ -81,7 +77,7 @@ function updateAccountProfile($accountFirstname, $accountLastname, $accountEmail
 
 function updateAccountPassword($accountPassword, $accountId){
     $db = testgenConnect();
-    $sql = 'UPDATE account SET accountPassword = :accountPassword WHERE accountId = :accountId';
+    $sql = 'UPDATE account SET accPassword = :accountPassword WHERE accID = :accountId';
     $stmt = $db->prepare($sql);
 
     $stmt->bindValue(':accountPassword', $accountPassword, PDO::PARAM_STR);

@@ -1,15 +1,19 @@
 <?php
-session_start();
-
-$action = filter_input(INPUT_POST, 'action');
-    if ($action == NULL) {
-        $action = filter_input(INPUT_GET, 'action');
+    session_start();
+    if (!empty($_SESSION['loggedin']) && isset($_SESSION['loggedin'])) {
+        $selectvar = $_SESSION['loggedin'];
+        echo $_SESSION['loggedin'];
+    } else {
+        $selectvar = FALSE;
     }
-
-    switch ($action) {
-      case 'example':
+    switch ($selectvar) {
+      case TRUE:
+          header('Location:views/account-menu.php');
           break;
-
+      case FALSE:
+          include 'views/login.php';
+          break;
       default:
-          include 'views/main-menu.php';
+          //include 'views/login.php';
+          break;
   }

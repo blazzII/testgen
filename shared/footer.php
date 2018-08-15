@@ -1,8 +1,7 @@
 
 <footer>
     <hr>
-    &copy;<?php echo date("Y"); ?> • Air Test Gen • <a href="admin-menu.php">Administration</a> • 
-    <?php echo date ("l, d F Y")?>
+    &copy;<?php echo date("Y"); ?> • Air Test Gen • All Rights Reserved
     <br>
-    <small><?php echo "last mod: " . date ("F d, Y", getlastmod()); ?></small>
+    <small><span class="bolder"><?php echo date ("l, d F Y")?></span></small>
 </footer>
