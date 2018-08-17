@@ -8,7 +8,6 @@
     --blue-5: rgba(100, 150, 200, .5);
     --blue-25: rgba(100, 150, 200, .25);
     --blue-1: rgba(100, 150, 200, .1);
-
     /* layout */
     --maxwdith: 767px;
 }
@@ -37,16 +36,13 @@ body {
 a {
     background-color: transparent;
     text-decoration: none;
+    color: blue;
 }
 
 a:hover {
     text-decoration: underline;
     color: black;
     font-weight: 700;
-}
-
-a:visited, a:active {
-    color: purple;
 }
 
 h1,
@@ -74,7 +70,8 @@ h2 {
 
 h3 {}
 
-h3, th {
+h3,
+th {
     font-size: 1.1rem;
     text-shadow: 2px 2px 2px #444;
     background: radial-gradient(circle, var(--blue), var(--blue-5));
@@ -145,11 +142,58 @@ form>p {
 .formitem {
     margin: 3px;
     text-align: right;
+    position: relative;
+    clear: both;
 }
 
 .formitem>a {
     clear: both;
     float: right;
+}
+
+.formitem label {
+    width: 200px;
+    text-align: right;
+}
+
+.formitemquestion label {
+    text-align: left;
+}
+
+.formitem textarea {
+    transition: border-color 1.5s ease-in, box-shadow 2s ease-in;
+    outline: 0;
+    box-shadow: none;
+    border: 1px solid #ced4da;
+    box-sizing: content-box;
+    overflow-y: hidden;
+    padding: .5rem;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+.formitem textarea:hover {
+    border-color: var(--blue);
+    box-shadow: 3px 3px 20px #444;
+}
+
+.placeholdertext {
+    pointer-events: none;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    transition: 0.25s;
+    transition-timing-function: ease;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    opacity: 0.85;
+    color: var(--blue);
+    font-weight: bold;
+}
+
+input:focus+span,
+input:not(:placeholder-shown)+span {
+    opacity: 1;
+    transform: scale(0.75) translateY(0) translateX(-160%);
 }
 
 .menuitem {
@@ -159,11 +203,19 @@ form>p {
 
 .formitemlabel {
     padding: 5px 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
-input,select {
+input {
     padding: 7px;
     font-size: 1.5rem;
+    margin: 3px;
+}
+
+select {
+    padding: 7px;
+    font-size: 1.1rem;
     margin: 3px;
 }
 
@@ -202,32 +254,6 @@ input:invalid {
     color: red;
 }
 
-.formitem label {
-    width: 200px;
-    text-align: right;
-}
-
-.formitemquestion label {
-    text-align: left;
-}
-
-.formitem textarea {
-    transition: border-color 1.5s ease-in, box-shadow 2s ease-in;
-    outline: 0;
-    box-shadow: none;
-    border: 1px solid #ced4da;
-    box-sizing: content-box;
-    overflow-y: hidden;
-    padding: .5rem;
-    resize: none;
-    margin-bottom: 15px;
-}
-
-.formitem textarea:hover {
-    border-color: var(--blue);
-    box-shadow: 3px 3px 20px #444;
-}
-
 /* Data Table Styling ****************************************/
 
 table {
@@ -235,7 +261,8 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     padding: .5rem;
     text-align: center;
     border: 1px solid var(--blue-5);
@@ -269,14 +296,6 @@ tr:nth-child(even) {
     width: 100%;
     font-size: 1rem;
 }
-
-.submenu {
-    display:flex;
-    vertical-align: middle;
-    align-items: center;
-    background-color: #ddd;
-}
-
 
 .bolder {
     font-weight: 700;
@@ -317,6 +336,9 @@ tr:nth-child(even) {
     background-color: rgb(255, 200, 200, .33);
 }
 
+.clearfix {
+    clear:both;
+}
 
 /* Message Boxes - Class Selectors ******************************/
 
@@ -363,7 +385,9 @@ tr:nth-child(even) {
     width: 100%;
 }
 
+
 /* tablet views */
+
 @media (min-width: 40em) {
     .grid-container {
         grid-template-columns: 1fr 1fr 1fr;

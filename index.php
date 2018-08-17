@@ -1,19 +1,18 @@
 <?php
     session_start();
     if (!empty($_SESSION['loggedin']) && isset($_SESSION['loggedin'])) {
-        $selectvar = $_SESSION['loggedin'];
-        echo $_SESSION['loggedin'];
+        $path = $_SESSION['loggedin'];
     } else {
-        $selectvar = FALSE;
+        $path = FALSE;
     }
-    switch ($selectvar) {
+    switch ($path) {
       case TRUE:
-          header('Location:views/account-menu.php');
-          break;
+        header ('Location: /testgen/accounts/?action=accountView');
+        break;
       case FALSE:
-          include 'views/login.php';
-          break;
+        header ('Location: /testgen/accounts/?action=loginView');
+        break;
       default:
-          //include 'views/login.php';
-          break;
+        header ('Location: /testgen/accounts/?action=loginView');
+        break;
   }

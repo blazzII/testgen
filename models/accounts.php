@@ -1,14 +1,14 @@
 <?php 
 /* ∆ Accounts Model ***********************************************/
 
-function register($accountFirstname, $accountLastname, $accountEmail, $accountPassword) {
+function register($accountFirstName, $accountLastName, $accountEmail, $accountPassword) {
     $db = testgenConnect();
     $sql = 'INSERT INTO account (accFirstName, accLastName, accEmail, accPassword, accLevel)
-        VALUES (:accountFirstname, :accountLastname, :accountEmail, :accountPassword, 1)';
+        VALUES (:accountFirstName, :accountLastName, :accountEmail, :accountPassword, 1)';
     $stmt = $db->prepare($sql);
 
-    $stmt->bindValue(':accountFirstname', $accountFirstname, PDO::PARAM_STR);
-    $stmt->bindValue(':accountLastname', $accountLastname, PDO::PARAM_STR);
+    $stmt->bindValue(':accountFirstName', $accountFirstName, PDO::PARAM_STR);
+    $stmt->bindValue(':accountLastName', $accountLastName, PDO::PARAM_STR);
     $stmt->bindValue(':accountEmail', $accountEmail, PDO::PARAM_STR);
     $stmt->bindValue(':accountPassword', $accountPassword, PDO::PARAM_STR);
     

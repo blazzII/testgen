@@ -10,6 +10,9 @@ require_once '../models/testquestions.php';
 require_once '../models/accounts.php';
 require_once '../library/functions.php';
 
+// clear session message
+$_SESSION['message'] = null;
+
 // action sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 if ($action == NULL) {
@@ -21,7 +24,7 @@ function getTestQuestions() {
         
     if (empty($_SESSION['testID']) || count($questions) < 1) {
       $message = '<div class="msg warn">Please provide a valid Test Code. You provided: ' . $_SESSION['testID'] . '</div>';
-      include '../views/select-test.php';
+      include '../views/test-select.php';
       exit; 
     }    
 
@@ -42,9 +45,9 @@ function getTestQuestions() {
 
 switch ($action) {
     case 'createTestView':
-        $pageTitle = 'Test Generator • Create a New Test';
+        $pageTitle = 'Create a New Test';
         $formItems = buildFormItemCategories();
-        include '../views/create-test.php';
+        include '../views/test-create.php';
         break;
 
     case 'createTest':   
@@ -66,64 +69,103 @@ switch ($action) {
 
         if ($createTest === 1) {
             $testID = buildRandomTestID(); 
-            $result = addNewTest($testID, $_SESSION['accID']);
+            $result = addNewTest($testID, $_SESSION['accountData']['accID']);
             if ($result === 1) {
                 // testquestion table
                 foreach($testquestions as $questionID) {
                     $testquestion = addNewTestQuestion($testID, $questionID);
                 }
                 if($testquestion === 1) {
-                    $message = '<div class="msg good">A new test was successfully created. The ID value is ' . $testID . '</div>';
-                    header('Location: /testgen/accounts/?action=viewAccount');
+                    $_SESSION['message'] = '<div class="msg good">A new test was successfully created. The ID value is ' . $testID . '</div>';
+                    header('location: ./?action=evaluatorTestQuestionsView&testID=' . $testID);
                     exit;
                 } else {
-                    $message = '<div class="msg warn">Something went wrong when creating a new test.</div>';
-                    include '../views/create-test.php';
+                    $_SESSION['message'] = '<div class="msg warn">Something went wrong when creating a new test.<br>There may be no active questions in the selected category/categories.</div>';
+                    header('location:./?action=createTestView');
                     exit;
                 }
             }
+        } else {
+            $message = '<div class="msg warn">Something went wrong when creating a new test in that questions were not selected.</div>';
+            include '../views/test-create.php';
+            exit;
         }
         break;
 
     case 'testSelectView':   
         $pageTitle = 'Select Test';
-        include '../views/select-test.php';
+        include '../views/test-select.php';
         break;
 
     
     case 'testView':   
         if (!isset($_SESSION['testID']) || empty($_SESSION['testID'])) {
             $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+            if ($testID == NULL) {
+                $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+            }  
             $_SESSION['testID'] = $testID;
         } 
         $testQuestions = getTestQuestions();
         $pageTitle = 'Test ' . $_SESSION['testID'];
-        include '../views/test.php';
+        include '../views/test-display.php';
         break;
 
+    case 'evaluatorTestQuestionsView':
+        $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+          if ($testID == NULL) {
+            $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+        }  
+        $questions = getTestBytestID($testID);
+        
+        $qNum = 1;
+        $testQuestions = '<table>';
+        $testQuestions .= '<tr><th>#</th><th>Question</th><th>Category</th><th>Active</th>';
+        foreach ($questions as $question) {
+            ($question['qActive'] === '1') ? $background = 'class="qactive left"' : $background = 'class="qnotactive left"';
+            ($question['qActive'] === '1') ? $status = 'Active' : $status = 'No';
+            
+            $testQuestions .= '<tr>
+                              <td>' . $qNum . '</td>
+                              <td>' . $question['qQuestion'] . '</td>
+                              <td>' . $question['catName'] . '</td>
+                              <td  ' . $background . '>' . $status . '</td>
+                              </tr>';
+            $qNum++;
+        }
+        $testQuestions .= '</table>';
+        $pageTitle = 'Test ' . $testID;
+        include '../views/test-questions.php';
+        break;
 
     case 'viewAllTestsByAccount':   
-        $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
-        $results = getAllTestsByaccID($accID);
+        /*if (!isset($_SESSION['accountData']['accID']) || $_SESSION['accountData']['accID'] == NULL) {
+            $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
+            if ($accID == NULL) {
+                $accID = filter_input(INPUT_GET, 'accID', FILTER_SANITIZE_STRING);
+            }  
+            $_SESSION['accD'] = $accID;
+        } */   
+        $results = getAllTestsByaccID($_SESSION['accountData']['accID']);
         
-        if (empty($accID) || count($results) < 1) {
+        if (count($results) < 1) {
           $message = '<div class="msg warn">There are no tests registered under your account.</div>';
           include '../views/account-menu.php';
           exit; 
         }    
 
-        $testlistoutput = "<table><tr><th>ID</th><th>#Q</th><th>Date</th><th>Count</th></tr>";
+        $testlistoutput = "<table><tr><th>&check;</th><th>Test ID</th><th>Date Created</th><th># of Questions</th></tr>";
         foreach ($results as $test) {
             $testlistoutput .= '<tr>
+                                <td><a href="./?action=evaluatorTestQuestionsView&testID=' . $test['testID']  . '">View</a></td>
                                 <td>' . $test['testID'] . '</td>
-                                <td>' . $test['qTotal'] . '</td> 
                                 <td>' . date('j F Y', strtotime($test['testDateCreated'])) . '</td>
-                                <td>' . $test['submissionCount'] . '</td>
+                                <td>' . $test['qTotal'] . '</td> 
                                 </tr>';
         }
         $testlistoutput .= "</table>";
-        $pageTitle = 'Tests Created by ' . $accID;
-        include '../views/tests-view-all.php';
+        $pageTitle = 'Test Created';
+        include '../views/test-list.php';
         break;        
     
     case 'submitTest':
@@ -140,7 +182,7 @@ switch ($action) {
               $message = '<div class="msg warn">Please provide the contact information requested.</div>';
               $testQuestions = getTestQuestions();
               $pageTitle = 'Test ' . $_SESSION['testID'];
-              include '../views/test.php';
+              include '../views/test-display.php';
               exit; 
             }
             // Hash the the default password ////////////////////////////////////////
@@ -159,7 +201,7 @@ switch ($action) {
                         $message = '<div class="msg warn">There was a problem writing your answers to the database.</div>';
                         $testQuestions = getTestQuestions();
                         $pageTitle = 'Test ' . $_SESSION['testID'];
-                        include '../views/test.php';
+                        include '../views/test-display.php';
                         exit;
                     }
                 }
@@ -167,8 +209,33 @@ switch ($action) {
         }
 
         break;
+
+    case 'emailTest':
+        $pilotEmail = filter_input(INPUT_POST, 'pilotEmail', FILTER_SANITIZE_EMAIL);
+        $pilotEmail = checkEmail($pilotEmail);
+        $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+
+        if(empty($pilotEmail) || empty($testID)){
+            $message = '<div class="msg warn">Please provide a valid email address.</div>';
+            include '../views/test-questions.php';  // error not sending test info?
+            exit; 
+        } 
+
+        // Set Up Email
+        $subject = 'TestGen TestID';
+        $header = 'From';
+        $message = 'Please got to http://www.testgen.com and use the following test identification code: ' . $testID;
+        $sentmail = mail($pilotEmail,$subject,$message,$header);
+        if ($sentmail) {
+            $message = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.';
+            include '../views/test-list.php';
+        } else {
+            $message = '<div class="msg warn">There was an error while sending the e-mail';
+            include '../views/test-questions.php';
+        }
+        break;
     
     default:
-      echo "Test model error .. check action path";
-      break;
+        echo 'Test model error .. check action path';
+        break;
 }

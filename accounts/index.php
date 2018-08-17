@@ -4,6 +4,7 @@
 session_start();
 require_once '../library/connections.php';  // DB Connection
 require_once '../models/accounts.php';
+require_once '../models/tests.php';
 require_once '../library/functions.php';
 
 // ACTION method sanitize and use POST or GET
@@ -16,17 +17,17 @@ switch ($action) {
     
     case 'loginView':
         $pageTitle = 'Login';
-        include '../views/login.php';
+        include '../views/account-login.php';
         break;
 
     case 'registrationView':
         $pageTitle = 'Register';
-        include '../views/register.php';
+        include '../views/account-register.php';
         break;
 
     case 'registration':
-        $accountFirstname = filter_input(INPUT_POST, 'accountFirstname', FILTER_SANITIZE_STRING);
-        $accountLastname = filter_input(INPUT_POST, 'accountLastname', FILTER_SANITIZE_STRING);
+        $accountFirstName = filter_input(INPUT_POST, 'accountFirstName', FILTER_SANITIZE_STRING);
+        $accountLastName = filter_input(INPUT_POST, 'accountLastName', FILTER_SANITIZE_STRING);
         $accountEmail = filter_input(INPUT_POST, 'accountEmail', FILTER_SANITIZE_EMAIL);
         $accountPassword = filter_input(INPUT_POST, 'accountPassword', FILTER_SANITIZE_STRING);
         $accountPasswordRepeated = filter_input(INPUT_POST, 'accountPasswordRepeated', FILTER_SANITIZE_STRING);
@@ -35,40 +36,38 @@ switch ($action) {
         // Check passwords are the same
         if($accountPassword != $accountPasswordRepeated) {
             $message = '<div class="msg warn">Passwords do not match.  Please try again.</div>';
-            include '../views/register.php';
+            include '../views/account-register.php';
             exit; 
         }
 
         // Check for missing data
-        if(empty($accountFirstname) || empty($accountLastname) || empty($accountEmail) || empty($checkPassword)){
-            $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
-            include '../views/register.php';
+        if(empty($accountFirstName) || empty($accountLastName) || empty($accountEmail) || empty($checkPassword)){
+            $message = '<div class="msg warn">Please provide information for all empty form fields.</div>'. $accountFirstName .$accountLastName.$accountEmail.$accountPassword;
+            include '../views/account-register.php';
             exit; 
         }
 
+        // Check for existing email address
         $existingEmail = checkExistingEmail($accountEmail);
-
-        // Check for existing email address in the table
         if($existingEmail){
-         $message = '<div class="msg warn">That email address already exists. Do you want to login instead?</div>';
-         include '../views/login.php';
-         exit;
+            $message = '<div class="msg warn">That email address already exists. Do you want to login instead?</div>';
+            include '../views/account-login.php';
+            exit;
         }
 
         // Hash the checked password
         $hashedPassword = password_hash($accountPassword, PASSWORD_DEFAULT);
 
-        // Send the data to the model
-        $regResult = register($accountFirstname, $accountLastname, $accountEmail, $hashedPassword);
-
+        // Register the account using hashedPassword and given fields
+        $accID = register($accountFirstName, $accountLastName, $accountEmail, $hashedPassword);
         // Check and report the result
-        if ($regResult === 1) {
-            $_SESSION['message'] = '<div class="msg good">Thank you for registering ' . $accountFirstname . '.<br>Use your email and password to login.</div>';
+        if ($accID > 0) {
+            $_SESSION['message'] = '<div class="msg good">Thank you for registering ' . $accountFirstName . $accID . '.<br>Use your email and password to login.</div>';
             header('Location: /testgen/accounts/?action=loginView');
             exit;
         } else {
-            $message = '<div class="msg warn">Sorry, $accountFirstname, but the registration failed. Please try again.</div>';
-            include '../views/register.php';
+            $message = '<div class="msg warn">Sorry,' . $accountFirstName . ', but the registration failed. Please try again.</div>';
+            include '../views/account-register.php';
             exit;
         }
         break;
@@ -83,7 +82,7 @@ switch ($action) {
         // Check for missing data
         if(empty($accountEmail) || empty($checkPassword)){
             $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
-            include '../views/login.php';
+            include '../views/account-login.php';
             exit; 
         }
         $accountData = getAccountByEmail($accountEmail);
@@ -92,12 +91,12 @@ switch ($action) {
 
         if (!$hashCheck) {
             $message = '<div class="msg warn">Invalid Password.  Please check your password and try again.</div>';
-            include '../views/login.php';
+            include '../views/account-login.php';
             exit;
         }
         
         $_SESSION['loggedin'] = TRUE;
-        $session_timeout = 10; // consider not having this
+        $session_timeout = 10; 
         if($rememberMe == 1) {
             $session_timeout = 24*60*60; 
         }
@@ -117,13 +116,21 @@ switch ($action) {
         exit;
 
     case 'accountView':
-        $pageTitle = 'My Account';
+        $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
+        $pageTitle = 'My Air Test Gen Account';
         include '../views/account-menu.php';
         exit;
 
+    case 'getAccountsView': // three options - 
+        
+        
+        $pageTitle = 'Registered Accounts';
+        include '../views/account-list-view.php';
+        exit;
+
     case 'updateAccountView':
-        $pageTitle = 'Account Update';
-        include '../views/account-update.php';
+        $pageTitle = 'Account Settings';
+        include '../views/account-settings.php';
         break;
 
     case 'updateAccount':
@@ -205,7 +212,10 @@ switch ($action) {
         break;
     default:
         if ($_SESSION['loggedin'] === TRUE) {
+          $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
+          $pageTitle = 'My Air Test Gen Account';
           include '../views/account-menu.php';
+          exit;
         } else {
           header ('Location: /testgen/accounts/?action=login');
         }

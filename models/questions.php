@@ -20,7 +20,7 @@
 
     function getQuestionByID($qID) {
         $db = testgenConnect();
-        $sql = 'SELECT qID, qQuestion, catName, qAnswerKey, qReference, qActive FROM question as q INNER JOIN category as cat ON cat.catID = q.catID WHERE qID = :qID';
+        $sql = 'SELECT qID, qQuestion, catName, qAnswerKey, qReference, qActive, COUNT(tq.questionID) as usetotal FROM question as q INNER JOIN category as cat ON cat.catID = q.catID INNER JOIN testquestion as tq ON tq.questionID = q.qID WHERE qID = :qID';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':qID', $qID, PDO::PARAM_INT);
         $stmt->execute();
@@ -30,14 +30,15 @@
         return $question;
     }
 
-    function updateQuestion($qID,$qQuestion) {
+    function updateQuestion($questionID,$qQuestion,$qAnswerKey,$qReference,$qActive) {
         $db = testgenConnect();
-        $sql = 'UPDATE inventory SET invName = :invName, invDescription = :invDescription, invImage = :invImage, invThumbnail = :invThumbnail, invPrice = :invPrice, 
-            invStock = :invStock, invSize = :invSize, invWeight = :invWeight, invLocation = :invLocation, categoryId = :categoryId, 
-            invVendor = :invVendor, invStyle = :invStyle WHERE invId = :invId';
+        $sql = 'UPDATE question SET qQuestion = :qQuestion, qAnswerKey = :qAnswerKey, qReference = :qReference, qActive = :qActive WHERE qID = :questionID';
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':invName', $invName, PDO::PARAM_STR);
-        $stmt->bindValue(':invId', $invId, PDO::PARAM_INT);
+        $stmt->bindValue(':qQuestion', $qQuestion, PDO::PARAM_STR);
+        $stmt->bindValue(':qAnswerKey', $qAnswerKey, PDO::PARAM_STR);
+        $stmt->bindValue(':qReference', $qReference, PDO::PARAM_STR);
+        $stmt->bindValue(':qActive', $qActive, PDO::PARAM_INT);       
+        $stmt->bindValue(':questionID', $questionID, PDO::PARAM_INT);
         $stmt->execute();
         
         $rowsChanged = $stmt->rowCount();
@@ -82,9 +83,21 @@
         return $questions;
     }
 
+    function getQuestionCountByCategory($catID) {
+        $db = testgenConnect();
+        $sql = 'SELECT q.qID FROM question as q WHERE catID = :catID';
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':catID', $catID, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $rowsChanged = $stmt->rowCount();
+        $stmt->closeCursor();
+        return $rowsChanged;
+    }
+
     function getRandomQuestions($catID, $numOfQuestions) {
         $db = testgenConnect();
-        $sql = 'SELECT qID FROM question WHERE catID = :catID ORDER BY RAND() LIMIT :numOfQuestions';
+        $sql = 'SELECT qID FROM question WHERE catID = :catID AND qActive = "1" ORDER BY RAND() LIMIT :numOfQuestions';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':catID', $catID, PDO::PARAM_INT);
         $stmt->bindValue(':numOfQuestions', $numOfQuestions, PDO::PARAM_INT);

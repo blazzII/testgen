@@ -8,19 +8,17 @@
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
       <main>
         <h2>Login</h2>
-
-        <?php 
-          if (isset($_SESSION['message'])) {echo $_SESSION['message'];}
-          if (isset($message)) {echo $message;}
-        ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
 
         <form action="/testgen/accounts/" method="post">    
           <hr>
           <div class="formitem">
-            <input type="email" placeholder="Enter Email" name="accountEmail" id="accountEmail" required onfocus="changeinput()" <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
+            <input type="email" placeholder=" " name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
+            <span class="placeholdertext">Email</span>
           </div>           
           <div class="formitem">
-            <input type="password" placeholder="Enter Password" name="accountPassword" id="accountPassword" required pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+            <input type="password" placeholder=" " name="accountPassword" id="accountPassword" required pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+            <span class="placeholdertext">Password</span>
           </div>
           <div class="formitem">                 
             <input type="checkbox" name="remember" id="remember" value="1"> Remember me<br>
@@ -52,11 +50,6 @@
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
     </div>
 
-    <script>
-      function changeinput(){
-        
-      }
-    </script>
   </body>
 </html>
 <?php unset($_SESSION['message']); ?>

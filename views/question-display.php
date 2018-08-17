@@ -7,13 +7,14 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
       <main>
-        <h2>Tests Created</h2>
-        <hr>
         <?php if (isset($message)) { echo $message;} ?>
-        <?php echo $testlistoutput; ?>
-        <div class="formitem">
-          <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Close">
-        </div>
+        <form action="/testgen/questions/?action=viewAllQuestions" method="post">
+            <h2>Question: id.<?php echo $qID ?></h2>
+            <hr>
+            <?php echo $markup; ?>
+            <div class="formitem">
+              <input type="submit" value="Return">
+            </div>
         </form>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>

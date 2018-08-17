@@ -8,7 +8,7 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
       <main>
-        <h2>Enter Test Code</h2>
+        <h2>Enter a Test Code</h2>
 
         <?php 
           if (isset($_SESSION['message'])) {echo $_SESSION['message'];}
@@ -18,7 +18,8 @@
         <form action="/testgen/tests/" method="post">    
           <hr>
           <div class="formitem">
-            <input type="text" placeholder="Enter Test Code" name="testID" id="testID" required <?php if(isset($testIDE)){echo "value='$testID'";}  ?>>
+            <input type="text" placeholder=" " name="testID" id="testID" required <?php if(isset($testIDE)){echo "value='$testID'";}  ?>>
+            <span class="placeholdertext">Test Code</span>
           </div>           
           <hr>
           <div class="formitem">

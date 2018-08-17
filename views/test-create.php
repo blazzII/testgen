@@ -17,6 +17,9 @@
           <hr>
           <input type="submit" value="Create Test">
           <input type="hidden" name="action" value="createTest">
+          <div class="formitem">
+           <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
+          </div>
         </form>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>

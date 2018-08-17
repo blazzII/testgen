@@ -7,10 +7,11 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
       <main>
-        <?php if (isset($message)) { echo $message;} ?>
+        
         <form action="/testgen/tests/" method="post">
             <h2>Test: <?php echo $_SESSION['testID'] ?></h2>
             <hr>
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <div class="formitem">
               <label for="accountFirstName"><strong>Enter Your First Name:</strong></label>
               <input type="text" name="accountFirstName" id="accountFirstName" required <?php if(isset($accountFirstName)){echo "value='$accountFirstName'";}  ?>>

@@ -8,17 +8,17 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
       <main>
-        <?php if (isset($message)) { echo $message;} ?>
         <form action="/testgen/accounts/" method="post" id="regForm">
             <h2>Register</h2>
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <hr>
             <div class="formitem">
-              <label for="accountFirstname"><strong>First Name:</strong></label>
-              <input type="text" name="accountFirstname" id="accountFirstname" required <?php if(isset($accountFirstname)){echo "value='$accountFirstname'";}  ?>>
+              <label for="accountFirstName"><strong>First Name:</strong></label>
+              <input type="text" name="accountFirstName" id="accountFirstName" required <?php if(isset($accountFirstName)){echo "value='$accountFirstName'";}  ?>>
             </div>
             <div class="formitem">
-              <label for="accountLastname"><strong>Last Name:</strong></label>
-              <input type="text" name="accountLastname" id="accountLastname" required <?php if(isset($accountLastname)){echo "value='$accountLastname'";}  ?>>
+              <label for="accountLastName"><strong>Last Name:</strong></label>
+              <input type="text" name="accountLastName" id="accountLastName" required <?php if(isset($accountLastName)){echo "value='$accountLastName'";}  ?>>
             </div>
             <div class="formitem">
               <label for="accountEmail"><strong>Email (username):</strong></label>
