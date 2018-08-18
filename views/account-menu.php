@@ -9,7 +9,7 @@
         <main>
             <h2><?php echo $_SESSION['accountData']['accFirstName'] . ' ' . $_SESSION['accountData']['accLastName']; ?></h2>
             <hr>
-            
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <?php // determine level
               switch ($_SESSION['accountData']['accLevel']) {
                 case 1:
@@ -32,16 +32,18 @@
               <span class="bolder">Registration Date:</span> <?php echo date('j F Y', strtotime($_SESSION['accountData']['accDateRegistered'])); ?>
             </div>
             <div class="infocolumn">
-              <span class="bolder">Test Count:</span> <?php echo $testCount; ?><br>  
-              <?php if ($_SESSION['accountData']['accLevel'] != 1) { ?>
-                <span class="bolder">Tests Written:</span> <?php echo 'list' ?><br> 
-              <?php } ?>  
+              <?php if(isset($testCount)) { ?>
+              <span class="bolder">Tests Taken:</span> <?php echo $testCount; ?><br>  
+              <?php }
+              //if ($_SESSION['accountData']['accLevel'] != 1) { ?>
+                <!--<span class="bolder">Tests Written:</span> <?php //echo 'list' ?><br> -->
+              <?php //} ?>  
             </div>
             <hr>
             <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <div class="grid-container">
               <section>    
-                <h3>Account</h3>
+                <h3>Accounts</h3>
                 <form action="/testgen/accounts/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="updateAccountView">
@@ -51,20 +53,23 @@
                 <?php if ($_SESSION['accountData']['accLevel'] > 1) { // first block ?>
                 <form action="/testgen/accounts/" method="post">
                   <div class="menuitem">
-                    <input type="hidden" name="action" value="getPilots">
+                    <input type="hidden" name="action" value="getAccountsView">
+                    <input type="hidden" name="accLevel" value="1">
                     <input class="btn" type="submit" value="Pilots">
                   </div>
                 </form>
                 <?php if ($_SESSION['accountData']['accLevel'] > 1) { // second block ?>
                 <form action="/testgen/accounts/" method="post">
                   <div class="menuitem">
-                    <input type="hidden" name="action" value="getEvaluators">
+                    <input type="hidden" name="action" value="getAccountsView">
+                    <input type="hidden" name="accLevel" value="2">
                     <input class="btn" type="submit" value="Evaluators">
                   </div>
                 </form>
                 <form action="/testgen/accounts/" method="post">
                   <div class="menuitem">
-                    <input type="hidden" name="action" value="getAdministrators">
+                    <input type="hidden" name="action" value="getAccountsView">
+                    <input type="hidden" name="accLevel" value="3">
                     <input class="btn" type="submit" value="Adminstrators">
                   </div>
                 </form>
@@ -78,10 +83,10 @@
                     <input class="btn" type="submit" value="Take a Test">
                   </div>
                 </form>
-                <?php if($accLevel=='Administrator' || $accLevel == 'Evaluator') { ?> 
+              <?php if($accLevel=='Administrator' || $accLevel == 'Evaluator') { ?> 
                 <form action="/testgen/tests/" method="post">
-                  <input class="btn" type="submit" value="Create New Test">
                   <input type="hidden" name="action" value="createTestView">
+                  <input class="btn" type="submit" value="Create New Test">
                 </form>
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
@@ -90,7 +95,7 @@
                     <input class="btn" type="submit" value="Manage Tests">
                   </div>
                 </form>
-                <?php } ?>
+              <?php } ?>
               </section> 
               <?php if($accLevel=='Administrator') { ?> 
               <section>

@@ -11,7 +11,8 @@
         <form action="/testgen/tests/" method="post">
             <h2>Test: <?php echo $_SESSION['testID'] ?></h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; 
+            if (!$_SESSION['loggedin']) { ?>
             <div class="formitem">
               <label for="accountFirstName"><strong>Enter Your First Name:</strong></label>
               <input type="text" name="accountFirstName" id="accountFirstName" required <?php if(isset($accountFirstName)){echo "value='$accountFirstName'";}  ?>>
@@ -25,10 +26,8 @@
               <input type="email" name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
             </div>
             <hr>
-            <div class="msg info">
-              It is recommended that you write and save your answers to the questions in another application and copy them into the test when you are ready to submit.
-            </div>
-            <?php echo $testQuestions; ?>
+            <?php } 
+              echo $testQuestions; ?>
             <div class="formitem">
               <input type="submit">
               <input type="hidden" name="action" value="submitTest">

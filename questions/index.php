@@ -54,13 +54,13 @@ switch ($action) {
             ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
             $questionurl = '../questions?action=viewQuestion&qID=' . $question["qID"];
 
-            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>';
-            $markup .= '<td ' . $background . '>';
-            $markup .= 'Question Category: ' . $question['catName'] . '</strong> | ' . $status . '<br>';
-            $markup .= '<strong>' . $question['qQuestion'] . '</strong>';
-            $markup .= '</td><tr>';
+            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>
+                        <td ' . $background . '>
+                        Question Category: ' . $question['catName'] . '</strong> | ' . $status . '<br>
+                        <strong>' . $question['qQuestion'] . '</strong>
+                        </td><tr>';
         }
-        $markup .= '</tbody></table>';
+        $markup .= '</table>';
         $pageTitle = 'Manage Questions';
         include '../views/question-list.php';
         break;

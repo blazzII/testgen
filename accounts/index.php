@@ -7,6 +7,9 @@ require_once '../models/accounts.php';
 require_once '../models/tests.php';
 require_once '../library/functions.php';
 
+// clear session message
+$_SESSION['message'] = null;
+
 // ACTION method sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
     if ($action == NULL) {
@@ -122,10 +125,45 @@ switch ($action) {
         exit;
 
     case 'getAccountsView': // three options - 
-        
+        $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+        // validate input
+        if (empty($accLevel)) {
+            $message = '<div class="msg warn center">An account level was not properly set.</div>';
+            include '../views/account-menu.php';
+        }
+
+        $accounts = getAccountByLevel($accLevel);
+        // determine level
+              switch ($accLevel) {
+                case 1:
+                  $accLevelText = "Pilot";
+                  break;
+                case 2:
+                  $accLevelText = "Evaluator";
+                  break;
+                case 3:
+                  $accLevelText = "Administrator";
+                  break;
+                default:
+                  $accLevelText = 'Undetermined Error.';
+                  break;
+              }
+        $markup = '<table>';
+        $markup .= '<tr><th>&check;</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Registration Date</th></tr>';
+        foreach ($accounts as $account) {
+            
+            $questionurl = '../accounts?action=editAccountView&accID=' . $account["accID"];
+            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>
+                        <td>' . $account['accFirstName'] . '</td>
+                        <td>' . $account['accLastName'] . '</td>
+                        <td>' . $account['accEmail'] . '</td>
+                        <td>' . date('j F Y', strtotime($account['accDateRegistered'])) . '</td>
+                        </td><tr>';
+        }
+        $markup .= '</table>';
         
         $pageTitle = 'Registered Accounts';
-        include '../views/account-list-view.php';
+        include '../views/account-list.php';
         exit;
 
     case 'updateAccountView':

@@ -23,7 +23,7 @@ function getTestQuestions() {
     $questions = getTestBytestID($_SESSION['testID']);
         
     if (empty($_SESSION['testID']) || count($questions) < 1) {
-      $message = '<div class="msg warn">Please provide a valid Test Code. You provided: ' . $_SESSION['testID'] . '</div>';
+      $message = '<div class="msg warn">Please provide a valid Test Code or the test that you entered does not have any questions assigned to it.<br> You provided: ' . $_SESSION['testID'] . '</div>';
       include '../views/test-select.php';
       exit; 
     }    
@@ -31,14 +31,18 @@ function getTestQuestions() {
     $qNum = 1;
     $testQuestions = "";
     foreach ($questions as $question) {
-        $testQuestions .= '<div class="formitemquestion">
-        <label for="a' . $question['testquestionID'] . '"><strong><span class="blue">Question # ' . $qNum . ' 
-        </span><br>Category: ' . $question['catName'] . '</strong>
-        <br>' . $question['qQuestion'] . '
-        </label>
-        <textarea name="a' . $question['testquestionID'] . '" required cols="80" rows="5"></textarea>
-        </div><hr>';  
-        $qNum++;
+      
+      if (!empty(filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING))) {
+        $savedAnswer = filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING);
+      } else {
+        $savedAnswer = "";
+      }
+      $testQuestions .= '<div class="formitemquestion">
+                         <p><strong><span class="blue">Question # ' . $qNum . ' </span> &#10070; [' . $question['catName'] . ']</strong><br>
+                         ' . $question['qQuestion'] . '</p>
+                         <textarea name="ans' . $question['testquestionID'] . '" required cols="70" rows="5">' . trim($savedAnswer) . '</textarea>
+                         </div><hr>';  
+      $qNum++;
     }
     return $testQuestions;
 }
@@ -99,13 +103,14 @@ switch ($action) {
 
     
     case 'testView':   
-        if (!isset($_SESSION['testID']) || empty($_SESSION['testID'])) {
-            $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
-            if ($testID == NULL) {
-                $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
-            }  
-            $_SESSION['testID'] = $testID;
-        } 
+        $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+        if ($testID == NULL) {
+          $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+        }  
+        if ($testID != NULL) {
+          $_SESSION['testID'] = $testID;
+        }
+
         $testQuestions = getTestQuestions();
         $pageTitle = 'Test ' . $_SESSION['testID'];
         include '../views/test-display.php';
@@ -156,8 +161,11 @@ switch ($action) {
 
         $testlistoutput = "<table><tr><th>&check;</th><th>Test ID</th><th>Date Created</th><th># of Questions</th></tr>";
         foreach ($results as $test) {
+
+            $questionurl = './?action=evaluatorTestQuestionsView&testID=' . $test["testID"];
+
             $testlistoutput .= '<tr>
-                                <td><a href="./?action=evaluatorTestQuestionsView&testID=' . $test['testID']  . '">View</a></td>
+                                <td><button onclick="location.href=\'' . $questionurl . '\'">Open</button></td>
                                 <td>' . $test['testID'] . '</td>
                                 <td>' . date('j F Y', strtotime($test['testDateCreated'])) . '</td>
                                 <td>' . $test['qTotal'] . '</td> 
@@ -171,7 +179,7 @@ switch ($action) {
     case 'submitTest':
         // Check if the client is set with accID
         // If the client not set then create a new account with the DEFAULT password
-        if (!isset($_SESSION['accID'])) {
+        if (!$_SESSION['loggedin']) {
             $accountFirstName = filter_input(INPUT_POST, 'accountFirstName', FILTER_SANITIZE_STRING);
             $accountLastName = filter_input(INPUT_POST, 'accountLastName', FILTER_SANITIZE_STRING);
             $accountEmail = filter_input(INPUT_POST, 'accountEmail', FILTER_SANITIZE_EMAIL);
@@ -189,15 +197,17 @@ switch ($action) {
             $hashedPassword = password_hash("testgen123!", PASSWORD_DEFAULT);
             // Register the client data
             $accID = register($accountFirstName, $accountLastName, $accountEmail, $hashedPassword);
-            echo $accID;
-            $_SESSION['accID'] = $accID; // Note the difference in this session versus ['clientData'][]
+            $_SESSION['accID'] = $accID;
+        } else {
+            $_SESSION['accID'] = $_SESSION['accountData']['accID'];
         }
 
         foreach($_POST as $testquestionID => $value) {
-            if (strpos($testquestionID, 'a') === 0) {
+            if (strpos($testquestionID, 'ans') == 1) {
                 if ($value != "" && !empty($value)) {
-                    $recordedAdded = recordAnswers($testquestionID, $value, $_SESSION['accID']);  
-                    if ($recordedAdded != 1) {
+                    $testquestionID = substr($testquestionID,3);
+                    $recordAdded = recordAnswers($testquestionID, $value, $_SESSION['accID']);  
+                    if ($recordAdded != 1) {
                         $message = '<div class="msg warn">There was a problem writing your answers to the database.</div>';
                         $testQuestions = getTestQuestions();
                         $pageTitle = 'Test ' . $_SESSION['testID'];
@@ -207,7 +217,8 @@ switch ($action) {
                 }
             }
         }
-
+        $_SESSION['message'] = '<div class="msg good">Your answers were recorded.</div>';
+        header('location:../accounts/');
         break;
 
     case 'emailTest':

@@ -9,8 +9,9 @@
       <main>
         <h2>Tests Created by <?php echo $_SESSION['accountData']['accFirstName'] . ' ' . $_SESSION['accountData']['accLastName']; ?></h2>
         <hr>
-        <?php if (isset($message)) { echo $message;} ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
         <?php echo $testlistoutput; ?>
+        <hr>
         <div class="formitem">
           <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
         </div>

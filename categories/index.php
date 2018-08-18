@@ -29,7 +29,7 @@ switch ($action) {
         }
         $markup .= '</tbody></table>';
         $pageTitle = 'Manage Categories';
-        include '../views/categories-list.php';
+        include '../views/category-list.php';
         break;
 
     case 'viewAddNewCategory':   

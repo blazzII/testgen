@@ -47,6 +47,18 @@ function getAccountByEmail($accountEmail){
     return $accountData;
 } 
 
+// Get account by Level
+function getAccountByLevel($accLevel) {
+    $db = testgenConnect();
+    $sql = 'SELECT * FROM account WHERE accLevel = :accLevel';
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':accLevel', $accLevel, PDO::PARAM_INT);
+    $stmt->execute();
+    $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $accounts;    
+}
+
 // Get account data based on accountId
 function getAccountById($accountId){
     $db = testgenConnect();

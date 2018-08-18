@@ -156,10 +156,6 @@ form>p {
     text-align: right;
 }
 
-.formitemquestion label {
-    text-align: left;
-}
-
 .formitem textarea {
     transition: border-color 1.5s ease-in, box-shadow 2s ease-in;
     outline: 0;
@@ -169,12 +165,28 @@ form>p {
     overflow-y: hidden;
     padding: .5rem;
     resize: none;
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .formitem textarea:hover {
     border-color: var(--blue);
     box-shadow: 3px 3px 20px #444;
+}
+
+.formitemquestion label {
+    text-align: left;
+}
+
+.formitemquestion textarea {
+    transition: border-color 1.5s ease-in, box-shadow 2s ease-in;
+    outline: 0;
+    box-shadow: none;
+    border: 1px solid #ced4da;
+    box-sizing: content-box;
+    overflow-y: hidden;
+    padding: .5rem;
+    resize: none;
+    margin-bottom: 15px;
 }
 
 .placeholdertext {
