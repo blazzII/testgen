@@ -34,6 +34,7 @@ switch ($action) {
 
     case 'viewAddNewCategory':   
         $pageTitle = 'Add New Category';
+        include '../views/category-create.php';
         break;
 
     case 'addCategory':   

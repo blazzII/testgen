@@ -9,11 +9,12 @@
       <main>
         <h2>Manage Test Categories</h2>
         <hr>
-        <form action="viewAddNewCategory" method="post">
+        <form action="./" method="post">
           <?php echo $markup; ?>
           <hr>
           <div class="formitem">
             <input type="submit" value="Add New Category">
+            <input type="hidden" name="action" value="viewAddNewCategory">
           </div>
           <div class="formitem">
             <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
