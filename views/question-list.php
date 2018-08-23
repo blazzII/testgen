@@ -12,7 +12,7 @@
           <form action="/testgen/questions/" method="post">
             <div class="formitem">
               <input type="submit" value="Add New Question">
-              <input type="hidden" namce="action" value="viewAddNewQuestion">
+              <input type="hidden" name="action" value="viewAddNewQuestion">
             </div>
           </form>
 
@@ -27,7 +27,7 @@
             </div>
           </form>
         <hr>
-        <?php if (isset($message)) {echo $message;}?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
         <?php echo $markup; ?>
         <div class="formitem">
           <input class="smaller" type="button" onclick="location.href='/testgen/accounts'" value="Close">

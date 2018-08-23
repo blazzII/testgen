@@ -7,15 +7,21 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
       <main>
-        <?php if (isset($message)) { echo $message;} ?>
         <form action="/testgen/questions/?action=viewAllQuestions" method="post">
             <h2>Question: id.<?php echo $qID ?></h2>
             <hr>
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <?php echo $markup; ?>
             <div class="formitem">
               <input type="submit" value="Return">
             </div>
         </form>
+        <form action="/testgen/questions/" method="post">
+            <div class="formitem">
+              <input type="submit" value="Add Question">
+              <input type="hidden" name="action" value="viewAddNewQuestion">
+            </div>
+          </form>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
     </div>

@@ -7,8 +7,7 @@ require_once '../models/accounts.php';
 require_once '../models/tests.php';
 require_once '../library/functions.php';
 
-// clear session message
-$_SESSION['message'] = null;
+
 
 // ACTION method sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
@@ -65,8 +64,8 @@ switch ($action) {
         $accID = register($accountFirstName, $accountLastName, $accountEmail, $hashedPassword);
         // Check and report the result
         if ($accID > 0) {
-            $_SESSION['message'] = '<div class="msg good">Thank you for registering ' . $accountFirstName . $accID . '.<br>Use your email and password to login.</div>';
-            header('Location: /testgen/accounts/?action=loginView');
+            $_SESSION['message'] = '<div class="msg good">Thank you for registering ' . $accountFirstName . '.<br>Use your email and password to login.</div>';
+            header('Location: ./?action=loginView');
             exit;
         } else {
             $message = '<div class="msg warn">Sorry,' . $accountFirstName . ', but the registration failed. Please try again.</div>';
@@ -107,7 +106,7 @@ switch ($action) {
         array_pop($accountData); // remove the last item - the password
         $_SESSION['accountData'] = $accountData;
         $pageTitle = 'Account Menu';
-        include '../views/account-menu.php';
+        header ('location: ./?action=accountView');
         exit;
 
     case 'logout':
@@ -119,100 +118,126 @@ switch ($action) {
         exit;
 
     case 'accountView':
+        $accLevelText = getAccountLevelText($_SESSION['accountData']['accLevel']);
         $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
-        $pageTitle = 'My Air Test Gen Account';
+        $tests = getAllTestsByEvaluator($_SESSION['accountData']['accID']);
+        $testWCount = count($tests);
+        $pageTitle = 'My Account View';
         include '../views/account-menu.php';
         exit;
 
-    case 'getAccountsView': // three options - 
+    case 'getAccountsView': // A list of account - based on account level 
         $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+        if ($accLevel == NULL) {
+            $accLevel = filter_input(INPUT_GET, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+        }
+
         // validate input
         if (empty($accLevel)) {
-            $message = '<div class="msg warn center">An account level was not properly set.</div>';
-            include '../views/account-menu.php';
+            $_SESSION['message'] = '<div class="msg warn center">An account level was not properly set.</div>';
+            header('location:./?action=accountView');
+            exit;
         }
 
         $accounts = getAccountByLevel($accLevel);
-        // determine level
-              switch ($accLevel) {
-                case 1:
-                  $accLevelText = "Pilot";
-                  break;
-                case 2:
-                  $accLevelText = "Evaluator";
-                  break;
-                case 3:
-                  $accLevelText = "Administrator";
-                  break;
-                default:
-                  $accLevelText = 'Undetermined Error.';
-                  break;
-              }
+        $accLevelText = getAccountLevelText($accLevel);
+        $_SESSION['listnav'] = 1; // this is for navigation purposes if using the update account view
+
         $markup = '<table>';
-        $markup .= '<tr><th>&check;</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Registration Date</th></tr>';
+        if ($_SESSION['accountData']['accLevel'] == 3) {
+            $markup .= '<tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Registration Date</th><th>&#10004;</th><th>&#10008;</th></tr>';
+        } else {
+            $markup .= '<tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Registration Date</th><th>&check;</th></tr>';
+        }
         foreach ($accounts as $account) {
             
-            $questionurl = '../accounts?action=editAccountView&accID=' . $account["accID"];
-            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>
+            $editaccounturl = '../accounts?action=updateAccountView&accID=' . $account["accID"];
+            $deleteaccounturl = '../accounts?action=deleteAccountView&accID=' . $account["accID"];
+            $markup .= '<tr>
                         <td>' . $account['accFirstName'] . '</td>
                         <td>' . $account['accLastName'] . '</td>
                         <td>' . $account['accEmail'] . '</td>
-                        <td>' . date('j F Y', strtotime($account['accDateRegistered'])) . '</td>
-                        </td><tr>';
+                        <td>' . date('j M Y', strtotime($account['accDateRegistered'])) . '</td>
+                        <td><button onclick="location.href=\'' . $editaccounturl . '\'">Edit</button></td>'; 
+                        if ($_SESSION['accountData']['accLevel'] == 3) {
+                            $markup .= '<td><button onclick="location.href=\'' . $deleteaccounturl . '\'">Delete</button></td>'; 
+                        }
+            $markup .= '</tr>';
         }
         $markup .= '</table>';
         
-        $pageTitle = 'Registered Accounts';
+        $pageTitle = 'Registered ' . $accLevelText . ' Accounts';
         include '../views/account-list.php';
         exit;
 
     case 'updateAccountView':
-        $pageTitle = 'Account Settings';
+        $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        if (empty($accID) || $accID == null) {
+            header ('location: ./?action=accountView');
+            exit;
+        }
+        $account = getAccountByID($accID);
+        $accLevelText = getAccountLevelText($_SESSION['accountData']['accLevel']);
+        $_SESSION['navAccLevel'] = $account['accLevel'];
+        $pageTitle = 'Update Account Settings';
         include '../views/account-settings.php';
         break;
 
     case 'updateAccount':
         // Filter and store the data
-        $accountFirstName = filter_input(INPUT_POST, 'accountFirstname', FILTER_SANITIZE_STRING);
-        $accountLastname = filter_input(INPUT_POST, 'accountLastname', FILTER_SANITIZE_STRING);
-        $accountEmail = filter_input(INPUT_POST, 'accountEmail', FILTER_SANITIZE_EMAIL);
-        $accountEmail = checkEmail($accountEmail);
-        $accountID = filter_input(INPUT_POST, 'accountID', FILTER_SANITIZE_NUMBER_INT);
-        $pageTitle = 'Account Update';
+        $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        $accFirstName = filter_input(INPUT_POST, 'accFirstName', FILTER_SANITIZE_STRING);
+        $accLastName = filter_input(INPUT_POST, 'accLastName', FILTER_SANITIZE_STRING);
+        $accEmail = filter_input(INPUT_POST, 'accEmail', FILTER_SANITIZE_EMAIL);
+        $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
 
         // Check for missing data
-        if(empty($accountFirstname) || empty($accountLastname) || empty($accountEmail) ){
+        if(empty($accFirstName) || empty($accLastName) || empty($accEmail) || empty($accLevel)){
             $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
-            include '../views/updateAccount.php';
+            include '../views/account-settings.php';
             exit; 
         }
 
-        $existingEmail = checkExistingEmail($accountEmail);
-
-        // Check for existing email address in the table
-        if($existingEmail && $accountEmail != $_SESSION['accountData']['accountEmail']){
-         $message = '<div class="msg warn">That email address already exists. Please choose another email address.</div>';
-         include '../views/updateAccount.php';
-         exit;
-        }
-
         // Send the data to the model
-        $updateResult = updateaccountProfile($accountFirstname, $accountLastname, $accountEmail, $accountId);
+        $updateResult = updateAccount($accID, $accFirstName, $accLastName, $accEmail, $accLevel);
 
         // Check and report the result
-        if($updateResult === 1){
-            $accountData = getaccountById($accountId);
-            array_pop($accountData); // remove the last item - the password
-            $_SESSION['accountData'] = $accountData;
-            $message = '<div class="msg good">Profile update successful.</div>';
-            $pageTitle = 'My Account';
-            header('Location: /accounts/?action=myAccount');
+        if ($updateResult === 1) {
+            $_SESSION['message'] = '<div class="msg good">The account was successfully updated.</div>';
+            if ($_SESSION['listnav'] === 1) {
+                header('Location: ./?action=getAccountsView&accLevel=' . $_SESSION['navAccLevel']);
+            } else {
+                header('Location: ./?action=accountView');    
+            }
+            $_SESSION['listnav'] = 0;
             exit;
         } else {
-            $message = '<div class="msg warn">Sorry, the profile update failed. Please try again.</div>';
-            include '../views/updateAccount.php';
+            $_SESSION['message'] = '<div class="msg warn">Sorry, the account update failed. Please try again.</div>';
+            header('Location: ./?action=updateAccountView&accID='.$accID);
             exit;
         }
+        break;
+
+    case 'deleteAccountView':
+        $accID = filter_input(INPUT_GET, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        $account = getAccountById($accID); 
+        $testCount = getTestsTakenCount($accID);
+        $accLevelText = getAccountLevelText($account['accLevel']);
+        $pageTitle = 'Delete Account View';
+        include '../views/account-delete.php';
+        break;
+    
+    case 'deleteAccount':
+        $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+
+        $recorddeleted = deleteAccount($accID);
+        if ($recorddeleted === 1) {
+            $_SESSION['message'] = '<div class="msg good">The account was deleted.</div>';
+        } else {
+            $_SESSION['message'] = '<div class="msg warn">There was a problem accessing the account. The account may not have been deleted.</div>';
+        }
+        header ('Location: ./?action=getAccountsView&accLevel=' . $accLevel);
         break;
 
     case 'updatePassword':
@@ -224,13 +249,13 @@ switch ($action) {
 
         if($accountPassword != $accountPasswordRepeated) {
             $message = '<div class="msg warn">Passwords do not match.  Please try again.</div>';
-            include '../views/updateAccount.php';
+            include '../views/account-settings.php';
             exit; 
         }
 
         if(empty($checkPassword)){
             $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
-            include '../views/updateAccount.php';
+            include '../views/account-settings.php';
             exit; 
         }
 
@@ -248,13 +273,35 @@ switch ($action) {
             exit;
         }
         break;
+
+    case 'retrievePasswordView':
+        $pageTitle = 'Forgot Password';
+        include '../views/account-password.php';
+        break;
+
+    case 'retrievePassword':
+        $accountEmail = filter_input(INPUT_POST, 'accountEmail', FILTER_SANITIZE_EMAIL);
+        $accountEmail = checkEmail($accountEmail);
+        $emailFound = checkExistingEmail($accountEmail);
+        if(empty($accountEmail) || $emailFound == 0) {
+            $message = '<div class="msg warn">Please enter a valid, registered email address.</div>';
+            include '../views/account-login.php';
+            exit;
+        }
+        sendEmail($accountEmail);
+        $message = '<div class="msg good">Your password was sent to your email address.</div>';
+        include '../views/account-login.php';
+        break;
+
     default:
         if ($_SESSION['loggedin'] === TRUE) {
           $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
+          $tests = getAllTestsByaccID($_SESSION['accountData']['accID']);
+          $testWCount = count($tests);
           $pageTitle = 'My Air Test Gen Account';
           include '../views/account-menu.php';
           exit;
         } else {
-          header ('Location: /testgen/accounts/?action=login');
+            header ('Location: ./?action=login');
         }
 }

@@ -10,12 +10,13 @@
         <h2>Accounts: <?php echo $accLevelText ?> List</h2>
         <hr>
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
+
         <?php echo $markup; ?>
+        
         <hr>
         <div class="formitem">
-          <input class="smaller" type="button" onclick="location.href='/testgen/accounts'" value="Close">
+          <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Close">
         </div>
-        </form>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php';?>
     </div>

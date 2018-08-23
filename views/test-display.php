@@ -12,7 +12,8 @@
             <h2>Test: <?php echo $_SESSION['testID'] ?></h2>
             <hr>
             <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; 
-            if (!$_SESSION['loggedin']) { ?>
+            if (isset($_SESSION['loggedin'])) {
+             if (!$_SESSION['loggedin']) { ?>
             <div class="formitem">
               <label for="accountFirstName"><strong>Enter Your First Name:</strong></label>
               <input type="text" name="accountFirstName" id="accountFirstName" required <?php if(isset($accountFirstName)){echo "value='$accountFirstName'";}  ?>>
@@ -26,14 +27,17 @@
               <input type="email" name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
             </div>
             <hr>
-            <?php } 
-              echo $testQuestions; ?>
+            <?php 
+            } } // end of new user condition - name/email section 
+              echo $testQuestions; 
+            ?>
             <div class="formitem">
               <input type="submit">
               <input type="hidden" name="action" value="submitTest">
+              <input type="hidden" name="testID" value="<?php echo $_SESSION['testID']; ?>">
             </div>
             <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Cancel">
+              <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
             </div>
         </form>
       </main>

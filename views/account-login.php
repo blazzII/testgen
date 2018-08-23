@@ -26,13 +26,13 @@
           <hr>
           <div class="formitem">
             <input type="submit" value="Login">
-            <a href="/accounts/?action=forgotPasswordView">&#9757; Forgot Your Password?</a>
+            <a href="./?action=retrievePasswordView">&#9757; Forgot Your Password?</a>
             <input type="hidden" name="action" value="login">
           </div>  
         </form>
 
             
-        <form action="/testgen/accounts/" method="post">
+        <form action="./" method="post">
           <div class="formitem">
             <input type="hidden" name="action" value="registrationView">
             <input class="smallerFont" type="submit" value="Create New Account">

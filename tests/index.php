@@ -11,40 +11,12 @@ require_once '../models/accounts.php';
 require_once '../library/functions.php';
 
 // clear session message
-$_SESSION['message'] = null;
+$_SESSION['message'] = NULL;
 
 // action sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 if ($action == NULL) {
   $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-}
-
-function getTestQuestions() {
-    $questions = getTestBytestID($_SESSION['testID']);
-        
-    if (empty($_SESSION['testID']) || count($questions) < 1) {
-      $message = '<div class="msg warn">Please provide a valid Test Code or the test that you entered does not have any questions assigned to it.<br> You provided: ' . $_SESSION['testID'] . '</div>';
-      include '../views/test-select.php';
-      exit; 
-    }    
-
-    $qNum = 1;
-    $testQuestions = "";
-    foreach ($questions as $question) {
-      
-      if (!empty(filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING))) {
-        $savedAnswer = filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING);
-      } else {
-        $savedAnswer = "";
-      }
-      $testQuestions .= '<div class="formitemquestion">
-                         <p><strong><span class="blue">Question # ' . $qNum . ' </span> &#10070; [' . $question['catName'] . ']</strong><br>
-                         ' . $question['qQuestion'] . '</p>
-                         <textarea name="ans' . $question['testquestionID'] . '" required cols="70" rows="5">' . trim($savedAnswer) . '</textarea>
-                         </div><hr>';  
-      $qNum++;
-    }
-    return $testQuestions;
 }
 
 switch ($action) {
@@ -59,8 +31,7 @@ switch ($action) {
         $testquestions = array();
 
         foreach($_POST as $index => $value) {
-            if (strlen($index) < 2 ) {
-                //echo 'Index: ' . $index . '   Value: ' . $value . '<br>';
+            if (strlen($index) < 3 ) {
                 if ($value > 0) {
                     $questions = getRandomQuestions($index, $value);
                     foreach ($questions as $question) {   
@@ -102,17 +73,42 @@ switch ($action) {
         break;
 
     
+    // create the test form based on a valid testID supplied
     case 'testView':   
         $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
         if ($testID == NULL) {
           $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
         }  
-        if ($testID != NULL) {
-          $_SESSION['testID'] = $testID;
+        if ($testID == NULL) {
+            $message = '<div class="msg warn">Please submit a valid test ID value.</div>';
+            include '../views/test-select.php';
+            exit; 
+        }    
+        $questions = getTestBytestID($testID);    
+        if (count($questions) < 1) {
+            $message = '<div class="msg warn">The test that you entered does not have any questions assigned to it!</div>'.$testID;
+            include '../views/test-select.php';
+        exit; 
+        }    
+        $_SESSION['testID'] = $testID;
+        $qNum = 1;  // displayed question number
+        $testQuestions = "";  // initialize markup
+        foreach ($questions as $question) {
+            if (!empty(filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING))) {
+                $savedAnswer = filter_input(INPUT_POST, 'ans'. $question['testquestionID'], FILTER_SANITIZE_STRING);
+            } else {
+                $savedAnswer = "";
+            }
+            $testQuestions .= '<div class="formitemquestion">
+                               <p><strong><span class="blue">Question # ' . $qNum . ' </span></strong>
+                               &nbsp;&#10070;
+                               <small>' . $question['catName'] . '</small><br>'
+                               . $question['qQuestion'] . '</p>
+                               <textarea name="ans' . $question['testquestionID'] . '" required cols="70" rows="5">' . trim($savedAnswer) . '</textarea>
+                               </div><hr>';  
+            $qNum++;
         }
-
-        $testQuestions = getTestQuestions();
-        $pageTitle = 'Test ' . $_SESSION['testID'];
+        $pageTitle = 'Test ' . $testID;
         include '../views/test-display.php';
         break;
 
@@ -143,43 +139,12 @@ switch ($action) {
         include '../views/test-questions.php';
         break;
 
-    case 'viewAllTestsByAccount':   
-        /*if (!isset($_SESSION['accountData']['accID']) || $_SESSION['accountData']['accID'] == NULL) {
-            $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
-            if ($accID == NULL) {
-                $accID = filter_input(INPUT_GET, 'accID', FILTER_SANITIZE_STRING);
-            }  
-            $_SESSION['accD'] = $accID;
-        } */   
-        $results = getAllTestsByaccID($_SESSION['accountData']['accID']);
-        
-        if (count($results) < 1) {
-          $message = '<div class="msg warn">There are no tests registered under your account.</div>';
-          include '../views/account-menu.php';
-          exit; 
-        }    
-
-        $testlistoutput = "<table><tr><th>&check;</th><th>Test ID</th><th>Date Created</th><th># of Questions</th></tr>";
-        foreach ($results as $test) {
-
-            $questionurl = './?action=evaluatorTestQuestionsView&testID=' . $test["testID"];
-
-            $testlistoutput .= '<tr>
-                                <td><button onclick="location.href=\'' . $questionurl . '\'">Open</button></td>
-                                <td>' . $test['testID'] . '</td>
-                                <td>' . date('j F Y', strtotime($test['testDateCreated'])) . '</td>
-                                <td>' . $test['qTotal'] . '</td> 
-                                </tr>';
-        }
-        $testlistoutput .= "</table>";
-        $pageTitle = 'Test Created';
-        include '../views/test-list.php';
-        break;        
+    
     
     case 'submitTest':
         // Check if the client is set with accID
         // If the client not set then create a new account with the DEFAULT password
-        if (!$_SESSION['loggedin']) {
+        if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
             $accountFirstName = filter_input(INPUT_POST, 'accountFirstName', FILTER_SANITIZE_STRING);
             $accountLastName = filter_input(INPUT_POST, 'accountLastName', FILTER_SANITIZE_STRING);
             $accountEmail = filter_input(INPUT_POST, 'accountEmail', FILTER_SANITIZE_EMAIL);
@@ -187,10 +152,9 @@ switch ($action) {
 
             // Check for missing data and redirect if necessary
             if(empty($accountFirstName) || empty($accountLastName) || empty($accountEmail)) {
-              $message = '<div class="msg warn">Please provide the contact information requested.</div>';
-              $testQuestions = getTestQuestions();
-              $pageTitle = 'Test ' . $_SESSION['testID'];
-              include '../views/test-display.php';
+              $_SESSION['message'] = '<div class="msg warn">Please provide the contact information requested.</div>';
+              $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_NUMBER_INT);
+              header ('location: ./?action=testView&testID='.$testID);
               exit; 
             }
             // Hash the the default password ////////////////////////////////////////
@@ -202,23 +166,28 @@ switch ($action) {
             $_SESSION['accID'] = $_SESSION['accountData']['accID'];
         }
 
+        $writeFlag = FALSE;
         foreach($_POST as $testquestionID => $value) {
-            if (strpos($testquestionID, 'ans') == 1) {
+            if (strpos($testquestionID, 'ans') === 0) {
                 if ($value != "" && !empty($value)) {
                     $testquestionID = substr($testquestionID,3);
                     $recordAdded = recordAnswers($testquestionID, $value, $_SESSION['accID']);  
                     if ($recordAdded != 1) {
-                        $message = '<div class="msg warn">There was a problem writing your answers to the database.</div>';
-                        $testQuestions = getTestQuestions();
-                        $pageTitle = 'Test ' . $_SESSION['testID'];
-                        include '../views/test-display.php';
+                        $_SESSION['message'] = '<div class="msg warn">There was a problem writing your answers to the database.</div>';
+                        header ('location: ./?action=testView&testID='.$testID);
                         exit;
+                    } else {
+                        $writeFlag = TRUE;
                     }
                 }
             }
         }
-        $_SESSION['message'] = '<div class="msg good">Your answers were recorded.</div>';
-        header('location:../accounts/');
+        if ($writeFlag) {
+            $_SESSION['message'] = '<div class="msg good">Your answers were recorded.</div>';
+        } else {
+            $_SESSION['message'] = '<div class="msg warn">Your answers were not recorded.</div>';
+        }
+        header('location: ../accounts?action=accountView');
         break;
 
     case 'emailTest':
@@ -235,7 +204,7 @@ switch ($action) {
         // Set Up Email
         $subject = 'TestGen TestID';
         $header = 'From';
-        $message = 'Please got to http://www.testgen.com and use the following test identification code: ' . $testID;
+        $message = 'Please go to http://www.293testgenerator.com and use the following test identification code: ' . $testID;
         $sentmail = mail($pilotEmail,$subject,$message,$header);
         if ($sentmail) {
             $message = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.';
@@ -246,7 +215,53 @@ switch ($action) {
         }
         break;
     
-    default:
-        echo 'Test model error .. check action path';
-        break;
+    case 'testReviewView':   
+        $tests = getAllTestsByPilot($_SESSION['accountData']['accID']);
+        
+        if (count($tests) < 1) {
+          $message = '<div class="msg warn">There are no tests registered under your account.</div>';
+          include '../views/account-menu.php';
+          exit; 
+        }    
+
+        $testlistoutput = "<table><tr><th>Test ID</th><th>Date Submitted</th><th>Evaluator</th><th>&#10004;</th></tr>";
+        foreach ($tests as $test) {
+            $testurl = './?action=testReviewDetails&testID=' . $test["testID"];
+            $testlistoutput .= '<tr>
+                                <td>' . $test['testID'] . '</td>
+                                <td>' . date('j M Y', strtotime($test['testquestionDateSubmitted'])) . '</td>
+                                <td>' . $test['accLastName'] . '</td> 
+                                <td><button onclick="location.href=\'' . $testurl . '\'">View Details</button></td>
+                                </tr>';
+        }
+        $testlistoutput .= "</table>";
+        $pageTitle = 'Review Tests Taken';
+        include '../views/test-taken-list.php';
+        break;     
+        
+        case 'testReviewDetails':   
+            $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+            if ($testID == NULL) {
+                $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+            }  
+            $answers = getTestTakenDetails($testID);
+            $testdetails = '<table><tr><th>Test ID: ' . $testID . '</th></tr>';
+            foreach ($answers as $answer) {
+                $testdetails .= '<tr><td class="left">
+                                 ' . $answer['qQuestion'] . '
+                                 <br>
+                                 <small>' . $answer['catName'] . '</small>
+                                 </td></tr>
+                                 <tr><td class="left">
+                                 <strong>Pilot Answer: ' . $answer['testquestionAnswer'] . '</strong>
+                                 </td></tr>';
+            }
+            $testdetails .= '</table>';
+            $pageTitle = 'Test Review';
+            include '../views/test-taken-detail.php';
+            break;                      
+
+        default:
+            header ('location:./');
+            break;
 }

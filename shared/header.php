@@ -1,5 +1,5 @@
 <header>
-  <h1>AIR TEST GEN</h1>
+  <h1>293 TEST GENERATOR</h1>
   <?php
     if(!empty($_SESSION) && isset($_SESSION['loggedin'])) {
       if ($_SESSION['loggedin'] == TRUE) { ?>

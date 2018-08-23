@@ -62,7 +62,7 @@ h1 {
 
 h2 {
     font-size: 1.75rem;
-    padding: 1.5px;
+    padding: 1.5px 1.5px 0;
     letter-spacing: .1rem;
     /*background: radial-gradient(circle, #3377aa, #fff);*/
     color: #333;
@@ -165,7 +165,6 @@ form>p {
     overflow-y: hidden;
     padding: .5rem;
     resize: none;
-    margin-top: 15px;
 }
 
 .formitem textarea:hover {
@@ -355,7 +354,7 @@ tr:nth-child(even) {
 /* Message Boxes - Class Selectors ******************************/
 
 .msg {
-    margin: 5px;
+    margin: 7px;
     padding: 7px 12px;
     border-radius: 5px;
     border: 1px solid rgba(27, 31, 35, 0.15);
@@ -402,6 +401,10 @@ tr:nth-child(even) {
 
 @media (min-width: 40em) {
     .grid-container {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-grid-container {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }

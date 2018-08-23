@@ -3,7 +3,7 @@
 
   function getAllCategories() {
     $db = testgenConnect();
-    $sql = 'SELECT catID, catName FROM category';
+    $sql = 'SELECT catID, catName FROM category ORDER BY catName ASC';
     $stmt = $db->prepare($sql);
     $stmt->execute();
 

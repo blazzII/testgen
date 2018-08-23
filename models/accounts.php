@@ -50,7 +50,7 @@ function getAccountByEmail($accountEmail){
 // Get account by Level
 function getAccountByLevel($accLevel) {
     $db = testgenConnect();
-    $sql = 'SELECT * FROM account WHERE accLevel = :accLevel';
+    $sql = 'SELECT * FROM account WHERE accLevel = :accLevel ORDER BY accLastName ASC';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':accLevel', $accLevel, PDO::PARAM_INT);
     $stmt->execute();
@@ -60,33 +60,36 @@ function getAccountByLevel($accLevel) {
 }
 
 // Get account data based on accountId
-function getAccountById($accountId){
+function getAccountByID($accID){
     $db = testgenConnect();
-    $sql = 'SELECT * FROM account WHERE accID = :accountID';
+    $sql = 'SELECT * FROM account WHERE accID = :accID';
     $stmt = $db->prepare($sql);
-    $stmt->bindValue(':accountID', $accountID, PDO::PARAM_INT);
+    $stmt->bindValue(':accID', $accID, PDO::PARAM_INT);
     $stmt->execute();
     $accountData = $stmt->fetch(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
     return $accountData;
    }
 
-function updateAccountProfile($accountFirstname, $accountLastname, $accountEmail, $accountID){
+// Update Account using account ID
+function updateAccount($accID, $accFirstName, $accLastName, $accEmail, $accLevel) {
     $db = testgenConnect();
-    $sql = 'UPDATE account SET accFirstname = :accountFirstname, accLastname = :accountLastname, accEmail = :accountEmail WHERE accID = :accountId';
+    $sql = 'UPDATE account SET accFirstName = :accFirstName, accLastName = :accLastName, accEmail = :accEmail, accLevel = :accLevel WHERE accID = :accID';
     $stmt = $db->prepare($sql);
 
-    $stmt->bindValue(':accountFirstname', $accountFirstname, PDO::PARAM_STR);
-    $stmt->bindValue(':accountLastname', $accountLastname, PDO::PARAM_STR);
-    $stmt->bindValue(':accountEmail', $accountEmail, PDO::PARAM_STR);
-    $stmt->bindValue(':accountID', $accountID, PDO::PARAM_INT);
+    $stmt->bindValue(':accID', $accID, PDO::PARAM_INT);
+    $stmt->bindValue(':accFirstName', $accFirstName, PDO::PARAM_STR);
+    $stmt->bindValue(':accLastName', $accLastName, PDO::PARAM_STR);
+    $stmt->bindValue(':accEmail', $accEmail, PDO::PARAM_STR);
+    $stmt->bindValue(':accLevel', $accLevel, PDO::PARAM_INT);
 
     $stmt->execute();
-    $rowsChanged = $stmt->rowCount(); // validation using rowCount (1 UPDATE)
+    $accountUpdated = $stmt->rowCount();
     $stmt->closeCursor();
-    return $rowsChanged;
+    return $accountUpdated;
    }
 
+// Update Account Password
 function updateAccountPassword($accountPassword, $accountId){
     $db = testgenConnect();
     $sql = 'UPDATE account SET accPassword = :accountPassword WHERE accID = :accountId';
@@ -96,7 +99,21 @@ function updateAccountPassword($accountPassword, $accountId){
     $stmt->bindValue(':accountId', $accountId, PDO::PARAM_INT);
 
     $stmt->execute();
-    $rowsChanged = $stmt->rowCount();   // validation using rowCount (1 UPDATE)
+    $passwordupdated = $stmt->rowCount();
     $stmt->closeCursor();
-    return $rowsChanged;
+    return $passwordupdated;
    }
+
+// Delete Account using Account ID - Admin level only
+function deleteAccount($accID) {
+    $db = testgenConnect();
+    $sql = 'DELETE FROM account WHERE accID = :accID';
+    $stmt = $db->prepare($sql);
+
+    $stmt->bindValue(':accID', $accID, PDO::PARAM_INT);
+
+    $stmt->execute();
+    $accountdeleted = $stmt->rowCount();
+    $stmt->closeCursor();
+    return $accountdeleted;
+}

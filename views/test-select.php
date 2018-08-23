@@ -9,11 +9,11 @@
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
       <main>
         <h2>Enter a Test Code</h2>
-          <hr>
-          <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
-          <form action="/testgen/tests/" method="post"> 
+        <hr>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+        <form action="/testgen/tests/" method="post"> 
           <div class="formitem">
-            <input type="text" placeholder=" " name="testID" id="testID" max-length="20" required <?php if(isset($testIDE)){echo "value='$testID'";}  ?>>
+            <input type="text" placeholder=" " name="testID" id="testID" max-length="20" required <?php if(isset($testID)){echo "value='$testID'";}  ?>>
             <span class="placeholdertext">Test Code</span>
           </div>           
           <hr>
@@ -22,8 +22,8 @@
             <input type="hidden" name="action" value="testView">
           </div>  
           <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Cancel">
-            </div>
+            <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Cancel">
+          </div>
         </form>
       </main>
     

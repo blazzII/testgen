@@ -26,11 +26,10 @@ switch ($action) {
             ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
             $questionurl = '../questions?action=viewQuestion&qID=' . $question["qID"];
 
-            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>';
-            $markup .= '<td ' . $background . '>';
-            $markup .= 'Question Category: ' . $question['catName'] . '</strong> | ' . $status . '<br>';
-            $markup .= '<strong>' . $question['qQuestion'] . '</strong>';
-            $markup .= '</td><tr>';
+            $markup .= '<tr>
+                        <td><button onclick="location.href=\'' . $questionurl . '\'">View</button></td>
+                        <td ' . $background . '><strong>' . $question['qQuestion'] . '</strong><br><small>Category: ' . $question['catName'] . ' → ' . $status . '</small></td>
+                        </tr>';
         }
         $markup .= '</tbody></table>';
         $pageTitle = 'Manage Questions';
@@ -54,11 +53,10 @@ switch ($action) {
             ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
             $questionurl = '../questions?action=viewQuestion&qID=' . $question["qID"];
 
-            $markup .= '<tr><td><button onclick="location.href=\'' . $questionurl . '\'">Edit</button></td>
-                        <td ' . $background . '>
-                        Question Category: ' . $question['catName'] . '</strong> | ' . $status . '<br>
-                        <strong>' . $question['qQuestion'] . '</strong>
-                        </td><tr>';
+            $markup .= '<tr>
+                        <td><button onclick="location.href=\'' . $questionurl . '\'">View</button></td>
+                        <td ' . $background . '><strong>' . $question['qQuestion'] . '</strong><br><small>Category: ' . $question['catName'] . ' → ' . $status . '</small></td>
+                        </tr>';
         }
         $markup .= '</table>';
         $pageTitle = 'Manage Questions';
@@ -92,12 +90,42 @@ switch ($action) {
 
     case 'viewAddNewQuestion':   
         $pageTitle = 'Add New Question';
-        include '../views/question-add.php';
+        // build category select control
+        $categoryList = '<select name="catID" required>
+                           <option value ="" disabled selected>Select Category ...</option>';
+        $categoryList .= buildCatList();
+        $categoryList .= '</select>';
+        include '../views/question-create.php';
         break;
 
     case 'addQuestion':   
-        $pageTitle = '';
-        include '../views/.php';
+        $catID = filter_input(INPUT_POST, 'catID', FILTER_SANITIZE_NUMBER_INT);    
+        $qQuestion = filter_input(INPUT_POST, 'qQuestion', FILTER_SANITIZE_STRING);
+        $qAnswerKey = filter_input(INPUT_POST, 'qAnswerKey', FILTER_SANITIZE_STRING);
+        $qReference = filter_input(INPUT_POST, 'qReference', FILTER_SANITIZE_STRING);
+        $qActive = filter_input(INPUT_POST, 'qActive', FILTER_SANITIZE_STRING);
+
+        if(empty($catID) || empty($qQuestion) || empty($qAnswerKey)){
+            $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
+            include '../views/question-create.php';
+            exit; 
+        }
+
+        ($qActive == "on")?$qActive='1':$qActive='0';
+             
+        $qID = addQuestion($catID, $qQuestion, $qAnswerKey, $qReference, $qActive);
+        
+        // check for success
+        if(isset($qID) && !empty($qID)) {
+            $message = '<div class="msg good">The question was successfully added.</div>';
+            $pageTitle = 'Question View';
+            header("Location: ./?action=viewQuestion&qID=$qID");
+            exit;
+        } else {
+            $message = '<div class="msg warn">Sorry, the question failed to update.</div>';
+            include '../views/question-create.php';
+            exit;
+        }  
         break;
 
     case 'viewEditQuestion':   

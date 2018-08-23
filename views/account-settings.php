@@ -7,44 +7,50 @@
     <div class="flex-container">
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
         <main>
-            <h2>Account Settings</h2>
+            <h2>Update Account Settings</h2>
             <hr>
             <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
-            <?php // determine account level text only
-              switch ($_SESSION['accountData']['accLevel']) {
-                case 1:
-                  $accLevel = "Pilot";
-                  break;
-                case 2:
-                  $accLevel = "Evaluator";
-                  break;
-                case 3:
-                  $accLevel = "Administrator";
-                  break;
-                default:
-                  $message = 'There is a problem with your account. Please contact the administrator.';
-                  break;
-              }
-            ?>
+            
             <div class="infocolumn">
-              <span class="bolder">First Name:</span> <?php echo $_SESSION['accountData']['accFirstName']; ?><br>  
-              <span class="bolder">Last Name:</span> <?php echo $_SESSION['accountData']['accLastName']; ?><br>
-              <span class="bolder">Account Type:</span> <?php echo $accLevel; ?><br>
-              <span class="bolder">Email:</span> <?php echo $_SESSION['accountData']['accEmail']; ?><br>
-              <span class="bolder">Registration Date:</span> <?php echo date('j F Y', strtotime($_SESSION['accountData']['accDateRegistered'])); ?>
+              <span class="bolder">First Name:</span> <?php echo $account['accFirstName']; ?><br>  
+              <span class="bolder">Last Name:</span> <?php echo $account['accLastName']; ?><br>
+              <span class="bolder">Account Type:</span> <?php echo $accLevelText; ?><br>
+              <span class="bolder">Email:</span> <?php echo $account['accEmail']; ?><br>
+              <span class="bolder">Registration Date:</span> <?php echo date('j F Y', strtotime($account['accDateRegistered'])); ?>
             </div>
            
             <hr>
-            <div class="grid-container">
+            <div class="sub-container">
 
-                <form action="/testgen/accounts/" method="post">
-                  <div class="menuitem">
-                    <label for="accFirstName">First Name:</label><input type="text" name="accFirstName" value="">
-
+                <form action="/testgen/accounts/" method="post" id="accUpdate">
+                  <div class="formitem">
+                    <label for="accFirstName">First Name:</label>
+                    <input type="text" name="accFirstName" required  value="<?php echo $account['accFirstName']; ?>">
                   </div>  
-                  <div class="menuitem">
+                  <div class="formitem">
+                    <label for="accLastName">Last Name:</label>
+                    <input type="text" name="accLastName" required value="<?php echo $account['accLastName']; ?>">
+                  </div>  
+                  <div class="formitem">
+                    <label for="accEmail">Email:</label>
+                    <input type="text" name="accEmail" required value="<?php echo $account['accEmail']; ?>">
+                  </div>  
+
+                  <?php if ($_SESSION['accountData']['accLevel'] == 3) { ?>
+                    <div class="formitem">
+                      <label for="accLevel">Account Level/Type:</label>
+                      <input class="center" type="text" name="accLevel" size="2" required value="<?php echo $account['accLevel']; ?>">
+                    </div>  
+                  <?php } ?>
+
+                  <hr>
+                  <div class="formitem">
                     <input type="hidden" name="action" value="updateAccount">
-                    <input class="btn" type="submit" value="Submit Updates">
+                    <input type="hidden" name="accID" value="<?php echo $account['accID']; ?>">
+                    <input type="submit" form="accUpdate" value="Update Account">
+                  </div>
+                  <div class="formitem">
+                    <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
                   </div>
                 </form>
 

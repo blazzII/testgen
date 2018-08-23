@@ -2,20 +2,21 @@
   /* Test Model - handling test content db interactions ************************/
 
     // Add a new question to the database
-    function addQuestion($catID,$qQuestion,$qAnswer,$qReference){
+    function addQuestion($catID,$qQuestion,$qAnswer,$qReference,$qActive){
         $db = testgenConnect();
-        $sql = 'INSERT INTO question (catID, qQuestion, qAnswerKey, qReference)
-            VALUES (:catID, :question, :answer, :reference)';
+        $sql = 'INSERT INTO question (catID, qQuestion, qAnswerKey, qReference, qActive)
+            VALUES (:catID, :question, :answer, :reference, :active)';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':catID', $catID, PDO::PARAM_STR);
         $stmt->bindValue(':question', $qQuestion, PDO::PARAM_STR);
         $stmt->bindValue(':answer', $qAnswer, PDO::PARAM_STR);
         $stmt->bindValue(':reference', $qReference, PDO::PARAM_STR);
+        $stmt->bindValue(':active', $qActive, PDO::PARAM_INT);
         $stmt->execute();
 
-        $rowsChanged = $stmt->rowCount();
+        $qID = $db->lastInsertId();
         $stmt->closeCursor();
-        return $rowsChanged;
+        return $qID;
     }
 
     function getQuestionByID($qID) {
