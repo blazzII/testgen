@@ -1,4 +1,3 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/session.php'; ?>
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
@@ -22,7 +21,7 @@
             </div>
             <div class="formitem">
               <label for="accountEmail"><strong>Email (username):</strong></label>
-              <input type="email" name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
+              <input type="email" name="accountEmail" id="accountEmail" required size="35" <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
             </div>
             <div class="formitem">
               <label for="accountPassword"><strong>Password:</strong></label>

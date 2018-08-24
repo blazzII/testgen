@@ -9,10 +9,10 @@
         <main>
             <h2><?php echo $_SESSION['accountData']['accFirstName'] . ' ' . $_SESSION['accountData']['accLastName']; ?></h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+            
 
             <div class="infocolumn">
-              <span class="bolder">Account:</span> <?php echo $accLevelText; ?><br>
+              <span class="bolder">Account Type:</span> <?php echo $accLevelText; ?><br>
               <span class="bolder">Email:</span> <?php echo $_SESSION['accountData']['accEmail']; ?><br>
               <span class="bolder">Registration Date:</span> <?php echo date('j F Y', strtotime($_SESSION['accountData']['accDateRegistered'])); ?>
             </div>
@@ -34,7 +34,7 @@
               } ?>  
             </div>
             <hr>
-            
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <?php
               if ($_SESSION['accountData']['accLevel'] != 3) { 
                   echo '<div class="grid-container">';
@@ -79,28 +79,34 @@
               
               <section>  
                 <h3>Tests</h3>
+              
+              <?php if ($_SESSION['accountData']['accLevel'] == 1) { ?>     
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="testSelectView">
                     <input class="btn" type="submit" value="Take a Test">
                   </div>
                 </form>
+              
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="testReviewView">
-                    <input class="btn" type="submit" value="Review Tests Taken">
+                    <input class="btn" type="submit" value="Review Tests">
                   </div>
                 </form>
+              <?php } ?>  
               <?php if ($_SESSION['accountData']['accLevel'] > 1) { ?> 
                 <form action="/testgen/tests/" method="post">
+                <div class="menuitem">
                   <input type="hidden" name="action" value="createTestView">
-                  <input class="btn" type="submit" value="Create New Test">
+                  <input class="btn" type="submit" value="Create Test">
+              </div>
                 </form>
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <!-- <input type="hidden" name="accID" value="<?php //echo $_SESSION['accountData']['accID']; ?>"> -->
-                    <input type="hidden" name="action" value="viewAllTestsByAdminAccount">
-                    <input class="btn" type="submit" value="Manage Tests">
+                    <input type="hidden" name="action" value="manageTestsView">
+                    <input class="btn" type="submit" value="Review Tests">
                   </div>
                 </form>
               <?php } ?>
@@ -111,7 +117,8 @@
                 <h3>Questions</h3>
                 <form action="/testgen/questions/" method="post">
                   <div class="menuitem">
-                    <input type="hidden" name="action" value="viewAllQuestions">
+                    <input type="hidden" name="action" value="viewQuestionsByCategory">
+                    <input type="hidden" name="catID" value="1">
                     <input class="btn" type="submit" value="Manage Questions">
                   </div>
                 </form>

@@ -19,6 +19,9 @@
             <input type="hidden" name="action" value="retrievePassword">
             <input type="submit" value="Retrieve Password">
           </div>
+          <div class="formitem">
+              <input class="smaller" type="button" onclick="location.href='./?action=login'" value="Cancel">
+            </div>
         </form>
 
       </main>

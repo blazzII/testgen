@@ -79,7 +79,6 @@ switch ($action) {
         $accountPassword = filter_input(INPUT_POST, 'accountPassword', FILTER_SANITIZE_STRING);
         $accountEmail = checkEmail($accountEmail);
         $checkPassword = checkPassword($accountPassword);
-        $rememberMe = filter_input(INPUT_POST, 'remember', FILTER_SANITIZE_STRING);
         
         // Check for missing data
         if(empty($accountEmail) || empty($checkPassword)){
@@ -98,11 +97,6 @@ switch ($action) {
         }
         
         $_SESSION['loggedin'] = TRUE;
-        $session_timeout = 10; 
-        if($rememberMe == 1) {
-            $session_timeout = 24*60*60; 
-        }
-        $_SESSION['timeout'] = time() + $session_timeout;
         array_pop($accountData); // remove the last item - the password
         $_SESSION['accountData'] = $accountData;
         $pageTitle = 'Account Menu';
@@ -120,7 +114,7 @@ switch ($action) {
     case 'accountView':
         $accLevelText = getAccountLevelText($_SESSION['accountData']['accLevel']);
         $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
-        $tests = getAllTestsByEvaluator($_SESSION['accountData']['accID']);
+        $tests = getAllTestsCreated($_SESSION['accountData']['accID']);
         $testWCount = count($tests);
         $pageTitle = 'My Account View';
         include '../views/account-menu.php';

@@ -9,7 +9,7 @@
     --blue-25: rgba(100, 150, 200, .25);
     --blue-1: rgba(100, 150, 200, .1);
     /* layout */
-    --maxwdith: 767px;
+    --maxwidth: 850px;
 }
 
 /* download hex to rgba addon*/
@@ -219,9 +219,9 @@ input:not(:placeholder-shown)+span {
 }
 
 input {
-    padding: 7px;
-    font-size: 1.5rem;
-    margin: 3px;
+    padding: 5px;
+    font-size: 1.2rem;
+    margin: 2px;
 }
 
 select {
@@ -254,7 +254,7 @@ input[type="checkbox"] {
 }
 
 input.smallerFont {
-    font-size: 1rem;
+    font-size: .95rem;
 }
 
 input:valid {
@@ -287,7 +287,7 @@ tr:nth-child(even) {
 /* Class Selectors *******************************************/
 
 .flex-container {
-    max-width: var(--maxwdith);
+    max-width: var(--maxwidth);
     margin: 0 auto;
     display: flex;
     flex-flow: row wrap;
@@ -301,6 +301,12 @@ tr:nth-child(even) {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: .25rem;
+}
+
+.admin-grid-container {
+    display: grid;
+    grid-gap: .25rem;
+    grid-template-columns: 1fr;
 }
 
 .grid-container input[type="submit"] {
@@ -319,6 +325,12 @@ tr:nth-child(even) {
     color: var(--blue);
 }
 
+.answer {
+    margin-left: 25px;
+    font-size: larger;
+    color: blue;
+}
+
 .smaller {
     font-size: smaller;
 }
@@ -333,6 +345,16 @@ tr:nth-child(even) {
 
 .infocolumn {
     line-height: 1.1rem;
+}
+
+.padding {
+    padding: 5px;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+    justify-content: right;
 }
 
 .menubutton {

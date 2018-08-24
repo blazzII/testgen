@@ -19,6 +19,7 @@ switch ($action) {
     case 'viewAllQuestions':
         $options = buildCatList();
         $questions = getAllQuestions();
+        
         $markup = '<table>';
         foreach ($questions as $question) {
             
@@ -39,28 +40,37 @@ switch ($action) {
     case 'viewQuestionsByCategory':
         $options = buildCatList();
         $catID = filter_input(INPUT_POST, 'catID', FILTER_SANITIZE_STRING);
-
         if ($catID == NULL) {
             $catID = filter_input(INPUT_GET, 'catID', FILTER_SANITIZE_STRING);
-        }  //header('Location: /testgen/questions/?action=viewAllQuestions');
-    
-        $questions = getQuestionsByCategory($catID);
+        }
 
-        $markup = '<table>';
-        foreach ($questions as $question) {
-            
-            ($question['qActive'] === '1') ? $background = 'class="qactive left"' : $background = 'class="qnotactive left"';
-            ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
-            $questionurl = '../questions?action=viewQuestion&qID=' . $question["qID"];
+        if ($catID != 0 || !empty($catID)) {
+        
+            $questions = getQuestionsByCategory($catID);
+            if (count($questions) == 0 ) {
+                $message = '<div class="msg warn">There were no questions found in this category.</div>';
+                $markup = '';
+                $pageTitle = 'Manage Questions';
+                include '../views/question-list.php';
+                break;
+            }
+            $markup = '<table>';
+            foreach ($questions as $question) {
+                ($question['qActive'] === '1') ? $background = 'class="qactive left"' : $background = 'class="qnotactive left"';
+                ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
+                $questionurl = '../questions?action=viewQuestion&qID=' . $question["qID"];
 
-            $markup .= '<tr>
+                $markup .= '<tr>
                         <td><button onclick="location.href=\'' . $questionurl . '\'">View</button></td>
                         <td ' . $background . '><strong>' . $question['qQuestion'] . '</strong><br><small>Category: ' . $question['catName'] . ' → ' . $status . '</small></td>
                         </tr>';
+            }
+            $markup .= '</table>';
+        } else {
+            $markup = "Please select a category.";
         }
-        $markup .= '</table>';
-        $pageTitle = 'Manage Questions';
-        include '../views/question-list.php';
+            $pageTitle = 'Manage Questions';
+            include '../views/question-list.php';
         break;
 
     case 'viewQuestion':   

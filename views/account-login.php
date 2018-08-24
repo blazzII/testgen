@@ -13,15 +13,10 @@
         <form action="/testgen/accounts/" method="post">    
           <hr>
           <div class="formitem">
-            <input type="email" placeholder=" " name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
-            <span class="placeholdertext">Email</span>
+            <input type="email" placeholder="Email" name="accountEmail" id="accountEmail" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
           </div>           
           <div class="formitem">
-            <input type="password" placeholder=" " name="accountPassword" id="accountPassword" required pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
-            <span class="placeholdertext">Password</span>
-          </div>
-          <div class="formitem">                 
-            <input type="checkbox" name="remember" id="remember" value="1"> Remember me<br>
+            <input type="password" placeholder="Password" name="accountPassword" id="accountPassword" required pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
           </div>
           <hr>
           <div class="formitem">

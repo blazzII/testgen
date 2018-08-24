@@ -35,6 +35,23 @@
     // get test details for all tests written by an evaluator or administrator  
     function getAllTestsByEvaluator($accID) {
       $db = testgenConnect();
+      $sql = 'SELECT DISTINCT t.testID, COUNT(tq.testquestionID) AS totalQuestions, t.testDateCreated, tq.testquestionDateSubmitted, a.accLastName FROM test as t
+                INNER JOIN testquestion AS tq ON t.testID = tq.testID
+                INNER JOIN account AS a ON a.accID = tq.accID
+                WHERE t.accID = :accID
+                GROUP BY t.testID
+                ORDER BY t.testDateCreated DESC';
+      $stmt = $db->prepare($sql);
+      $stmt->bindValue(':accID', $accID, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $tests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $stmt->closeCursor();
+      return $tests;  
+    }
+
+    function getAllTestsCreated($accID) {
+      $db = testgenConnect();
       $sql = 'SELECT t.testID, COUNT(tq.testquestionID) AS qTotal, t.testDateCreated FROM test as t
                 LEFT JOIN testquestion AS tq ON t.testID = tq.testID
                 WHERE t.accID = :accID
@@ -84,7 +101,7 @@
 
     function getTestTakenDetails($testID) {
       $db = testgenConnect();
-      $sql = 'SELECT tq.testquestionAnswer, q.qQuestion, c.catName FROM testquestion AS tq
+      $sql = 'SELECT tq.testquestionAnswer, q.qID, q.qQuestion, q.qAnswerKey, c.catName FROM testquestion AS tq
                 INNER JOIN question AS q ON q.qID = tq.questionID
                 INNER JOIN category AS c ON c.catID = q.catID
                 WHERE tq.testID = :testID';

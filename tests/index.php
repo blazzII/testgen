@@ -112,6 +112,7 @@ switch ($action) {
         include '../views/test-display.php';
         break;
 
+    // get all questions
     case 'evaluatorTestQuestionsView':
         $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
           if ($testID == NULL) {
@@ -215,12 +216,12 @@ switch ($action) {
         }
         break;
     
-    case 'testReviewView':   
+    case 'testReviewView':  
         $tests = getAllTestsByPilot($_SESSION['accountData']['accID']);
         
         if (count($tests) < 1) {
-          $message = '<div class="msg warn">There are no tests registered under your account.</div>';
-          include '../views/account-menu.php';
+          $_SESSION['message'] = '<div class="msg warn">There are no tests registered under your account.</div>';
+          header ('location:../accounts/?action=accountView');
           exit; 
         }    
 
@@ -237,30 +238,76 @@ switch ($action) {
         $testlistoutput .= "</table>";
         $pageTitle = 'Review Tests Taken';
         include '../views/test-taken-list.php';
-        break;     
-        
-        case 'testReviewDetails':   
-            $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
-            if ($testID == NULL) {
-                $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
-            }  
-            $answers = getTestTakenDetails($testID);
-            $testdetails = '<table><tr><th>Test ID: ' . $testID . '</th></tr>';
-            foreach ($answers as $answer) {
-                $testdetails .= '<tr><td class="left">
-                                 ' . $answer['qQuestion'] . '
-                                 <br>
-                                 <small>' . $answer['catName'] . '</small>
-                                 </td></tr>
-                                 <tr><td class="left">
-                                 <strong>Pilot Answer: ' . $answer['testquestionAnswer'] . '</strong>
-                                 </td></tr>';
-            }
-            $testdetails .= '</table>';
-            $pageTitle = 'Test Review';
-            include '../views/test-taken-detail.php';
-            break;                      
+        break;         
 
+    case 'testReviewDetails':   
+        $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+        if ($testID == NULL) {
+            $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+        }  
+        $answers = getTestTakenDetails($testID);
+        $qNum = 1;
+        $testdetails = '<table><tr><th>Test ID: ' . $testID . '</th></tr>';
+        foreach ($answers as $answer) {
+            $testdetails .= '<tr><td class="left">
+                            ' . $qNum . '. <strong>' . $answer['qQuestion'] . '
+                             </strong>
+                             <small> &nbsp;[' . $answer['catName'] . ']</small><br>
+                             <span class="answer green">' . $answer['testquestionAnswer'] . '</span>
+                             </td></tr>';
+            $qNum++;
+        }
+        $testdetails .= '</table>';
+        $pageTitle = 'Test Review';
+        include '../views/test-taken-detail.php';
+        break;     
+            
+    case 'manageTestsView':
+        // get all tests that have submissions
+        $tests = getAllTestsByEvaluator($_SESSION['accountData']['accID']);
+        $markup = '<table><tr><th>Test ID</th><th>Date Created</th><th>Questions</th><th>Test Submission</th><th>&#10004;</th></tr>';
+        foreach ($tests as $test) {
+            $testurl = './?action=testEvaluation&testID=' . $test["testID"];
+            $markup .= '<tr>
+                            <td>' . $test['testID'] . '</td>
+                            <td>' . date('j M Y', strtotime($test['testDateCreated'])) . '</td>
+                            <td>' . $test['totalQuestions'] . '</td> 
+                            <td>' . $test['accLastName'] . ': ' . date('j M Y', strtotime($test['testquestionDateSubmitted'])) . '</td> 
+                            <td><button onclick="location.href=\'' . $testurl . '\'">View</button></td>
+                            </tr>';
+        }
+        $markup .= "</table>";
+        // get all tests created
+        include '../views/test-list-evaluator.php';
+        break;
+        
+    case 'testEvaluation':   
+        $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
+        if ($testID == NULL) {
+            $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+        }
+        $answers = getTestTakenDetails($testID);
+        $qNum = 1;
+        $markup = '<table>
+                   <tr><th>Test ID: ' . $testID . '</th></tr>';
+        foreach ($answers as $answer) {
+            $markup .= '<tr><td class="left">
+                       <hr>' . $qNum . '. <strong>' . $answer['qQuestion'] . '</strong>
+                       <small> &nbsp;[' . $answer['catName'] . ']</small><hr>
+                       <span class="answer">' . $answer['testquestionAnswer'] . '</span>
+                       <p class="info padding">' . $answer['qAnswerKey'] . '</p>
+                       </td></tr>
+                       <tr><td class="middle">Evalutor Notes:
+                         <textarea class="left" name="eval'. $answer['qID'] . '" cols="70" rows="5"></textarea>  
+                       </td></tr>';
+                $qNum++;
+            }
+            $markup .= '</table>
+                        ';  
+            $pageTitle = 'Evaluator Test Review';
+            include '../views/test-review.php';
+            break;
+        
         default:
             header ('location:./');
             break;

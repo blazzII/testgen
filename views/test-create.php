@@ -1,4 +1,3 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/session.php'; ?>
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
@@ -18,7 +17,7 @@
           <input type="submit" value="Create Test">
           <input type="hidden" name="action" value="createTest">
           <div class="formitem">
-            <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
+            <input class="smaller" type="button" onclick="location.href='../accounts/?action=accountView'" value="Cancel">
           </div>
         </form>
       </main>

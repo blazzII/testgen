@@ -1,4 +1,4 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/session.php'; ?>
+
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
