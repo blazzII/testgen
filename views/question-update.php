@@ -20,22 +20,22 @@
               <textarea name="qAnswerKey" id="qAnswerKey" required cols="70" rows="5"><?php if(isset($qAnswerKey)) {echo $qAnswerKey;} ?></textarea>
             </div>
             <div class="formitem">
-              <label for="qReference"><strong>Reference</strong></label>
+              <label for="qReference"><strong>Reference</strong></label><br>
               <input type="text" name="qReference" id="qReference" <?php if(isset($qReference)) {echo 'value="'.$qReference.'"';} ?>>
             </div>
             <div class="formitem">
-              <label for="qActive"><strong>Question Is ACTIVE</strong></label>
+              <label for="qActive"><strong>Question Is ACTIVE?</strong></label>
               <input type="checkbox" name="qActive" id="qActive" <?php if(isset($qActive) && $qActive == 1) { echo 'checked'; } ?>>
             </div>
             
             <hr>
             <div class="formitem">
-              <input type="submit" value="Update Question">
               <input type="hidden" name="action" value="editQuestion">
               <input type="hidden" name="qID" value="<?php echo $qID ?>">
+              <input class="submit" type="submit" value="Update Question">
             </div>
             <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='/testgen/questions?action=viewAllQuestions'" value="Cancel">
+              <input class="cancel" type="button" onclick="location.href='/testgen/questions?action=viewQuestionsByCategory?catID=<?php echo $catID ?>'" value="&#10008; Cancel">
             </div>
         </form>
       </main>

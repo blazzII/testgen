@@ -38,14 +38,14 @@ switch ($action) {
         break;
 
     case 'viewQuestionsByCategory':
+        $firstFlag = TRUE;
         $options = buildCatList();
-        $catID = filter_input(INPUT_POST, 'catID', FILTER_SANITIZE_STRING);
-        if ($catID == NULL) {
-            $catID = filter_input(INPUT_GET, 'catID', FILTER_SANITIZE_STRING);
-        }
+        if (isset($_POST['submit'])) {    
+            $catID = filter_input(INPUT_POST, 'catID', FILTER_SANITIZE_STRING);
+            if ($catID == NULL) {
+                $catID = filter_input(INPUT_GET, 'catID', FILTER_SANITIZE_STRING);
+            }
 
-        if ($catID != 0 || !empty($catID)) {
-        
             $questions = getQuestionsByCategory($catID);
             if (count($questions) == 0 ) {
                 $message = '<div class="msg warn">There were no questions found in this category.</div>';
@@ -54,7 +54,7 @@ switch ($action) {
                 include '../views/question-list.php';
                 break;
             }
-            $markup = '<table>';
+            $markup = '<table><tr><th colspan="2">Category: '. $questions[0]['catName'] .'</th></tr>';
             foreach ($questions as $question) {
                 ($question['qActive'] === '1') ? $background = 'class="qactive left"' : $background = 'class="qnotactive left"';
                 ($question['qActive'] === '1') ? $status = 'Active' : $status = 'Not Active';
@@ -62,12 +62,13 @@ switch ($action) {
 
                 $markup .= '<tr>
                         <td><button onclick="location.href=\'' . $questionurl . '\'">View</button></td>
-                        <td ' . $background . '><strong>' . $question['qQuestion'] . '</strong><br><small>Category: ' . $question['catName'] . ' → ' . $status . '</small></td>
+                        <td ' . $background . '><strong>' . $question['qQuestion'] . '</strong><br><small>' . $status . ': ' . $question['catName'] . '</small></td>
                         </tr>';
             }
             $markup .= '</table>';
+            $firstFlag = FALSE;
         } else {
-            $markup = "Please select a category.";
+            $markup = '<div class="msg good">Select a question category.</div>';
         }
             $pageTitle = 'Manage Questions';
             include '../views/question-list.php';
@@ -127,12 +128,11 @@ switch ($action) {
         
         // check for success
         if(isset($qID) && !empty($qID)) {
-            $message = '<div class="msg good">The question was successfully added.</div>';
-            $pageTitle = 'Question View';
+            $_SESSION['message'] = '<div class="msg good">The question was successfully added.</div>';
             header("Location: ./?action=viewQuestion&qID=$qID");
             exit;
         } else {
-            $message = '<div class="msg warn">Sorry, the question failed to update.</div>';
+            $message = '<div class="msg warn">Sorry, the question failed to be added.</div>';
             include '../views/question-create.php';
             exit;
         }  
@@ -148,6 +148,7 @@ switch ($action) {
         $qAnswerKey = $question['qAnswerKey'];
         $qReference = $question['qReference'];
         $qActive = $question['qActive'];
+        $catID = $question['catID'];
 
         $pageTitle = 'Edit Question';
         include '../views/question-update.php';
@@ -188,8 +189,25 @@ switch ($action) {
             exit;
         }
         break;
+    
+    case 'questionSummary':
+        $categories = getAllCategories();
+        $markup = '<table>';
+        $markup .= '<tr><th>Category Name</th><th>Total Questions</th><th>Questions Used</th>';
+        foreach ($categories as $category) {
+            $numofquestions = getQuestionCountByCategory($category['catID']);
+            $questionusecount = getQuestionUseCountByCategory($category['catID']);
+            $markup .= '<tr>
+                         <td>' . $category['catName'] . '</td>
+                         <td>' . $numofquestions . '</td>
+                         <td>' . $questionusecount . '</td>
+                       </tr>';
+        }
+        $pageTitle = 'Question Use Summary';
+        include '../views/question-summary.php';
+        exit;
 
     default:
-      echo "Model Error: Questions";
+      echo "Model Error: Questions - please report to developer";
       break;
 }

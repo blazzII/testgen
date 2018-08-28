@@ -21,7 +21,7 @@
 
     function getQuestionByID($qID) {
         $db = testgenConnect();
-        $sql = 'SELECT qID, qQuestion, catName, qAnswerKey, qReference, qActive, COUNT(tq.questionID) as usetotal FROM question as q INNER JOIN category as cat ON cat.catID = q.catID INNER JOIN testquestion as tq ON tq.questionID = q.qID WHERE qID = :qID';
+        $sql = 'SELECT qID, qQuestion, c.catID, c.catName, qAnswerKey, qReference, qActive, COUNT(tq.questionID) as usetotal FROM question as q INNER JOIN category as c ON c.catID = q.catID INNER JOIN testquestion as tq ON tq.questionID = q.qID WHERE qID = :qID';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':qID', $qID, PDO::PARAM_INT);
         $stmt->execute();
@@ -86,14 +86,26 @@
 
     function getQuestionCountByCategory($catID) {
         $db = testgenConnect();
-        $sql = 'SELECT q.qID FROM question as q WHERE catID = :catID';
+        $sql = 'SELECT q.qID FROM question AS q WHERE catID = :catID';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':catID', $catID, PDO::PARAM_INT);
         $stmt->execute();
         
-        $rowsChanged = $stmt->rowCount();
+        $count = $stmt->rowCount();
         $stmt->closeCursor();
-        return $rowsChanged;
+        return $count;
+    }
+
+    function getQuestionUseCountByCategory($catID) {
+        $db = testgenConnect();
+        $sql = 'SELECT tq.testquestionID FROM testquestion AS tq INNER JOIN question AS q ON tq.questionID = q.qID WHERE q.catID = :catID';
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':catID', $catID, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $count = $stmt->rowCount();
+        $stmt->closeCursor();
+        return $count;
     }
 
     function getRandomQuestions($catID, $numOfQuestions) {

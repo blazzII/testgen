@@ -11,9 +11,9 @@
       header ('Location: /testgen/accounts/?action=accountView');
       break;
     case FALSE:
-      header ('Location: /testgen/accounts/?action=loginView');
+      header ('Location: /testgen/accounts/?action=home');
       break;
     default:
-      header ('Location: /testgen/accounts/?action=loginView');
+      header ('Location: /testgen/accounts/?action=home');
       break;
   }

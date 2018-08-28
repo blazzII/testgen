@@ -1,5 +1,5 @@
 <header>
-  <h1>293 TEST GENERATOR</h1>
+  <h1>293 &#10148; TEST GENERATOR</h1>
   <?php
     if(!empty($_SESSION) && isset($_SESSION['loggedin'])) {
       if ($_SESSION['loggedin'] == TRUE) { ?>
@@ -10,6 +10,11 @@
           <button onclick="location.href='/testgen/accounts/?action=logout'">Logout</button>
         </div>
     <?php
+      } else { ?>
+        <div id="account">
+          <button onclick="location.href='./?action=loginView'">Login</button>
+        </div>
+    <?php     
       }
     }  
   ?>

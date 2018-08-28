@@ -34,7 +34,7 @@
                 <input type="hidden" name="action" value="deleteAccount">
                 <input type="hidden" name="accID" value="<?php echo $account['accID'] ?>">
                 <input type="hidden" name="accLevel" value="<?php echo $account['accLevel'] ?>">
-                <input class="btn" type="submit" value="Confirm Delete">
+                <input class="submit" type="submit" value="Confirm Delete">
               </div>
             </form>
 

@@ -6,17 +6,20 @@
   <body>
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php';?>
-      <main>
-        <h2>Accounts: <?php echo $accLevelText ?> List</h2>
-        <hr>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
 
-        <?php echo $markup; ?>
-        
+      
+      <main>
+      
+        <h2>Question Use Summary<br> By Category</h2>
+
         <hr>
-        <div class="formitem">
-          <input class="cancel" type="button" onclick="location.href='./?action=accountView'" value="Close">
+          <?php echo $markup; ?>
+        <hr>
+        
+        <div style="text-align: right;">
+          <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="&#10008; Close">
         </div>
+
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php';?>
     </div>

@@ -13,13 +13,7 @@
           <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
           <?php echo $markup; ?>
           <div class="formitem">
-            <input type="submit" value="Return">
-          </div>
-        </form>
-        <form action="/testgen/questions/" method="post">
-          <div class="formitem">
-            <input type="submit" value="Add Question">
-            <input type="hidden" name="action" value="viewAddNewQuestion">
+            <input class="submit" type="submit" value="Return">
           </div>
         </form>
       </main>

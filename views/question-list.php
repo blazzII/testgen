@@ -7,35 +7,33 @@
     <div class="flex-container">
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php';?>
       <main>
-        <h2>Manage Questions</h2>
+        <h2>Questions</h2>
         <hr>
-
-          <form action="/testgen/questions/" method="post">
-            <div class="formitem">
-                <select name="catID" required>
-                <option disabled selected>Choose a category ...</option>
-                <?php echo $options; ?>
-              </select>
-              <input type="submit" value="Filter">
-              <input type="hidden" name="action" value="viewQuestionsByCategory">
-            </div>
-          </form>
-        <hr>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
-
-        <?php echo $markup; ?>
 
         <form action="/testgen/questions/" method="post">
-          <div class="formitem">
-            <input type="submit" value="Add New Question">
-            <input type="hidden" name="action" value="viewAddNewQuestion">
-          </div>
-
-          <div class="formitem">
-            <input class="smaller" type="button" onclick="location.href='../accounts/?action=accountView'" value="Close">
+          <div>
+            <select name="catID" required>
+              <option disabled selected>Select a category ...</option>
+              <?php echo $options; ?>
+            </select>
+            <input type="hidden" name="action" value="viewQuestionsByCategory">
+            <input class="button" type="submit" name="submit" value="&#10096; Filter">
+            
+            <input class="button highlight" type="button" value="Add Question" onclick="location.href='./?action=viewAddNewQuestion'">
+            <input class="smaller cancel" style="float: right;" type="button" onclick="location.href='../accounts/?action=accountView'" value="&#10008;">
           </div>
         </form>
 
+        <hr>
+          <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
+
+          <?php echo $markup; ?>
+          
+          <?php if (!$firstFlag) { ?>
+          <div class="formitem">
+            <input class="smaller cancel" type="button" onclick="location.href='../accounts/?action=accountView'" value="&#10008; Close">
+          </div>
+          <?php } ?>
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php';?>
     </div>

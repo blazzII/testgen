@@ -13,14 +13,14 @@
   }
   
   
-  function addCategory($categoryName) {
+  function addCategory($catName) {
     $db = testgenConnect();
     $sql = 'INSERT INTO category (catName) VALUES (:catName)';
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':catName', $catName, PDO::PARAM_STR);
     $stmt->execute();
 
-    $rowsChanged = $stmt->rowCount();
+    $categoryadded = $stmt->rowCount();
     $stmt->closeCursor();
-    return $rowsChanged;
+    return $categoryadded;
   }

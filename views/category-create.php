@@ -1,4 +1,3 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/session.php'; ?>
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
@@ -17,11 +16,11 @@
           </div>           
           <hr>
           <div class="formitem">
-            <input type="submit">
             <input type="hidden" name="action" value="addCategory">
+            <input class="submit" type="submit">
           </div>  
           <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Cancel">
+              <input class="cancel" type="button" onclick="location.href='/testgen/'" value="&#10008; Cancel">
             </div>
         </form>
       </main>

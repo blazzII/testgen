@@ -13,16 +13,15 @@
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
         <form action="/testgen/tests/" method="post"> 
           <div class="formitem">
-            <input type="text" placeholder=" " name="testID" id="testID" max-length="20" required <?php if(isset($testID)){echo "value='$testID'";}  ?>>
-            <span class="placeholdertext">Test Code</span>
+            <input type="text" placeholder="Enter a Test Code" name="testID" id="testID" max-length="20" required>
           </div>           
           <hr>
           <div class="formitem">
-            <input type="submit">
             <input type="hidden" name="action" value="testView">
+            <input class="submit" type="submit">
           </div>  
           <div class="formitem">
-            <input class="smaller" type="button" onclick="location.href='/testgen/'" value="Cancel">
+            <input class="cancel" type="button" onclick="location.href='../'" value="Cancel">
           </div>
         </form>
       </main>

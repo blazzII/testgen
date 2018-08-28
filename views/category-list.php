@@ -13,11 +13,12 @@
           <?php echo $markup; ?>
           <hr>
           <div class="formitem">
-            <input type="submit" value="Add New Category">
+           
             <input type="hidden" name="action" value="viewAddNewCategory">
+            <input class="submit" type="submit" value="Add New Category">
           </div>
           <div class="formitem">
-            <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
+            <input class="cancel" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="&#10008; Close">
           </div>
         </form>
 

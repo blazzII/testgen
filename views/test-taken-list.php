@@ -16,7 +16,7 @@
         
         <hr>
         <div class="formitem">
-          <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
+          <input class="cancel" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
         </div>
         </form>
       </main>

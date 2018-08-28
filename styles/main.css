@@ -131,13 +131,8 @@ footer hr {
 
 /* FORMS *******************************************************/
 
-form {
-    padding: 0 7px 7px 7px;
-}
-
-form>p {
-    margin: 0;
-}
+form { padding: 0 7px 7px 7px;}
+form>p { margin: 0; }
 
 .formitem {
     margin: 3px;
@@ -156,7 +151,46 @@ form>p {
     text-align: right;
 }
 
-.formitem textarea {
+input {
+    padding: 5px;
+    font-size: 1.2rem;
+    margin: 2px;
+}
+
+input:focus+span,
+input:not(:placeholder-shown)+span {
+    opacity: 1;
+    transform: scale(0.9) translateY(0%) translateX(-125%);
+}
+
+input:focus::placeholder {
+    opacity: .6;
+}
+
+input[type="checkbox"] {
+    padding: 20px;
+    line-height: 20px;
+}
+
+input.smallerFont {
+    font-size: .95rem;
+}
+
+input:valid {
+    color: #333;
+}
+
+input:invalid {
+    color: red;
+}
+
+select {
+    padding: 7px;
+    font-size: 1.1rem;
+    margin: 3px;
+}
+
+textarea {
     transition: border-color 1.5s ease-in, box-shadow 2s ease-in;
     outline: 0;
     box-shadow: none;
@@ -167,9 +201,20 @@ form>p {
     resize: none;
 }
 
-.formitem textarea:hover {
+textarea:hover {
     border-color: var(--blue);
     box-shadow: 3px 3px 20px #444;
+}
+
+.menuitem {
+    margin: 7px;
+    text-align: center;
+}
+
+.formitemlabel {
+    padding: 5px 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 .formitemquestion label {
@@ -201,69 +246,37 @@ form>p {
     font-weight: bold;
 }
 
-input:focus+span,
-input:not(:placeholder-shown)+span {
-    opacity: 1;
-    transform: scale(0.75) translateY(0) translateX(-160%);
-}
-
-.menuitem {
-    margin: 7px;
-    text-align: center;
-}
-
-.formitemlabel {
-    padding: 5px 10px;
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-input {
-    padding: 5px;
-    font-size: 1.2rem;
-    margin: 2px;
-}
-
-select {
-    padding: 7px;
-    font-size: 1.1rem;
-    margin: 3px;
-}
-
-input[type="submit"] {
+.submit {
     padding-left: 25px;
     padding-right: 25px;
     float: right;
 }
 
-input[type="button"] {
-    padding-left: 25px;
-    padding-right: 25px;
-    clear: both;
-    float: right;
-}
-
-input[type="submit"]:hover {
+.submit:hover, .highlight:hover {
     border-color: var(--blue);
     box-shadow: 0 0 7px #444;
 }
 
-input[type="checkbox"] {
-    padding: 20px;
-    line-height: 20px;
+.button {
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
-input.smallerFont {
-    font-size: .95rem;
+.cancel {
+    background-color: rgb(245, 210, 210);
+    margin-left: 1rem;
+    padding: .5rem;
+    font-size: smaller;
 }
 
-input:valid {
-    color: #333;
-}
+/*input[type="button"] {
+    padding-left: 25px;
+    padding-right: 25px;
+    clear: both;
+    float: right;
+}*/
 
-input:invalid {
-    color: red;
-}
+
 
 /* Data Table Styling ****************************************/
 
@@ -335,6 +348,8 @@ tr:nth-child(even) {
     font-size: smaller;
 }
 
+
+
 .center {
     text-align: center;
 }
@@ -369,8 +384,12 @@ tr:nth-child(even) {
     background-color: rgb(255, 200, 200, .33);
 }
 
+.indent20 {
+    margin-left: 20px;
+}
+
 .clearfix {
-    clear:both;
+    clear: both;
 }
 
 /* Message Boxes - Class Selectors ******************************/
@@ -398,6 +417,13 @@ tr:nth-child(even) {
     color: rgba(30, 30, 135, 1);
 }
 
+.printdiv {
+    margin: 5px;
+    padding: 7px;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    background-color: #ddd;
+}
+
 /* ID Selectors **********************************************************/
 
 #account {
@@ -418,14 +444,12 @@ tr:nth-child(even) {
     width: 100%;
 }
 
-
 /* tablet views */
 
 @media (min-width: 40em) {
     .grid-container {
         grid-template-columns: 1fr 1fr;
     }
-
     .admin-grid-container {
         grid-template-columns: 1fr 1fr 1fr;
     }

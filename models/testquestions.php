@@ -1,7 +1,7 @@
 <?php 
   /* Test Question Submissions) Model ************************/
 
-  function addNewTestQuestion($testID, $questionID) {
+ function addNewTestQuestion($testID, $questionID) {
     $db = testgenConnect();
     $sql = 'INSERT INTO testquestion (testID, questionID)
             VALUES (:testID, :questionID)';
@@ -15,7 +15,7 @@
     return $rowsChanged;
  }
 
-  function recordAnswers($tqID, $tqAnswer, $accID) {
+ function recordAnswers($tqID, $tqAnswer, $accID) {
     $db = testgenConnect();
     $sql = 'UPDATE testquestion SET testquestionAnswer = :tqAnswer, testquestionDateSubmitted = NOW(), accID = :accID WHERE testquestionID = :tqID';
     $stmt = $db->prepare($sql);
@@ -27,4 +27,17 @@
     $rowsChanged = $stmt->rowCount();
     $stmt->closeCursor();
     return $rowsChanged;
+ }
+
+ function recordEvalNotes($tqID, $tqEvalNotes) {
+   $db = testgenConnect();
+   $sql = 'UPDATE testquestion SET testquestionEvalNotes = :tqEvalNotes WHERE testquestionID = :tqID';
+   $stmt = $db->prepare($sql);
+   $stmt->bindValue(':tqID', $tqID, PDO::PARAM_INT);
+   $stmt->bindValue(':tqEvalNotes', $tqEvalNotes, PDO::PARAM_STR);
+   $stmt->execute();
+
+   $rowsChanged = $stmt->rowCount();
+   $stmt->closeCursor();
+   return $rowsChanged;
  }

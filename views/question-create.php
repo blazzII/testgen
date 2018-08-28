@@ -34,11 +34,12 @@
             
             <hr>
             <div class="formitem">
-              <input type="submit" value="Add Question">
+             
               <input type="hidden" name="action" value="addQuestion">
+              <input class="submit" type="submit" value="Add Question">
             </div>
             <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='./?action=viewAllQuestions'" value="Cancel">
+              <input class="cancel" type="button" onclick="location.href='./?action=viewAllQuestions'" value="Cancel">
             </div>
         </form>
       </main>

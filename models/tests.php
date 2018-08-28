@@ -50,6 +50,7 @@
       return $tests;  
     }
 
+    // get summary information
     function getAllTestsCreated($accID) {
       $db = testgenConnect();
       $sql = 'SELECT t.testID, COUNT(tq.testquestionID) AS qTotal, t.testDateCreated FROM test as t
@@ -101,9 +102,10 @@
 
     function getTestTakenDetails($testID) {
       $db = testgenConnect();
-      $sql = 'SELECT tq.testquestionAnswer, q.qID, q.qQuestion, q.qAnswerKey, c.catName FROM testquestion AS tq
+      $sql = 'SELECT tq.testquestionID, tq.testquestionAnswer, tq.testquestionEvalNotes, tq.testquestionDateSubmitted, q.qID, q.qQuestion, q.qAnswerKey, c.catName, a.accFirstName, a.accLastName FROM testquestion AS tq
                 INNER JOIN question AS q ON q.qID = tq.questionID
                 INNER JOIN category AS c ON c.catID = q.catID
+                INNER JOIN account AS a ON a.accID = tq.accID
                 WHERE tq.testID = :testID';
       $stmt = $db->prepare($sql);
       $stmt->bindValue(':testID', $testID, PDO::PARAM_INT);

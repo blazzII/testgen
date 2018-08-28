@@ -48,7 +48,7 @@
                   <div class="menuitem">
                     <input type="hidden" name="action" value="updateAccountView">
                     <input type="hidden" name="accID" value="<?php echo $_SESSION['accountData']['accID']; ?>">
-                    <input class="btn" type="submit" value="Update My Account">
+                    <input class="submit" type="submit" value="Update My Account">
                   </div>
                 </form>
                 <?php if ($_SESSION['accountData']['accLevel'] > 1) { // first block ?>
@@ -56,7 +56,7 @@
                   <div class="menuitem">
                     <input type="hidden" name="action" value="getAccountsView">
                     <input type="hidden" name="accLevel" value="1">
-                    <input class="btn" type="submit" value="Pilots">
+                    <input class="submit" type="submit" value="Pilots">
                   </div>
                 </form>
                 <?php if ($_SESSION['accountData']['accLevel'] > 1) { // second block ?>
@@ -64,14 +64,14 @@
                   <div class="menuitem">
                     <input type="hidden" name="action" value="getAccountsView">
                     <input type="hidden" name="accLevel" value="2">
-                    <input class="btn" type="submit" value="Evaluators">
+                    <input class="submit" type="submit" value="Evaluators">
                   </div>
                 </form>
                 <form action="/testgen/accounts/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="getAccountsView">
                     <input type="hidden" name="accLevel" value="3">
-                    <input class="btn" type="submit" value="Adminstrators">
+                    <input class="submit" type="submit" value="Adminstrators">
                   </div>
                 </form>
                 <?php }} //end of second and firstblock ?>
@@ -84,14 +84,14 @@
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="testSelectView">
-                    <input class="btn" type="submit" value="Take a Test">
+                    <input class="submit" type="submit" value="Take a Test">
                   </div>
                 </form>
               
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="testReviewView">
-                    <input class="btn" type="submit" value="Review Tests">
+                    <input class="submit" type="submit" value="Review Tests">
                   </div>
                 </form>
               <?php } ?>  
@@ -99,14 +99,14 @@
                 <form action="/testgen/tests/" method="post">
                 <div class="menuitem">
                   <input type="hidden" name="action" value="createTestView">
-                  <input class="btn" type="submit" value="Create Test">
+                  <input class="submit" type="submit" value="Create Test">
               </div>
                 </form>
                 <form action="/testgen/tests/" method="post">
                   <div class="menuitem">
                     <!-- <input type="hidden" name="accID" value="<?php //echo $_SESSION['accountData']['accID']; ?>"> -->
                     <input type="hidden" name="action" value="manageTestsView">
-                    <input class="btn" type="submit" value="Review Tests">
+                    <input class="submit" type="submit" value="Review Tests">
                   </div>
                 </form>
               <?php } ?>
@@ -117,15 +117,21 @@
                 <h3>Questions</h3>
                 <form action="/testgen/questions/" method="post">
                   <div class="menuitem">
+                    <input type="hidden" name="action" value="questionSummary">
+                    <input class="submit" type="submit" value="Question Use Summary">
+                  </div>
+                </form>
+                <form action="/testgen/questions/" method="post">
+                  <div class="menuitem">
                     <input type="hidden" name="action" value="viewQuestionsByCategory">
                     <input type="hidden" name="catID" value="1">
-                    <input class="btn" type="submit" value="Manage Questions">
+                    <input class="submit" type="submit" value="Manage Questions">
                   </div>
                 </form>
                 <form action="/testgen/categories/" method="post">
                   <div class="menuitem">
                     <input type="hidden" name="action" value="viewAllCategories">
-                    <input class="btn" type="submit" value="Manage Categories">
+                    <input class="submit" type="submit" value="Manage Categories">
                   </div>
                 </form>
               </section>

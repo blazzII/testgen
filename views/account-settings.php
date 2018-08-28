@@ -47,10 +47,10 @@
                   <div class="formitem">
                     <input type="hidden" name="action" value="updateAccount">
                     <input type="hidden" name="accID" value="<?php echo $account['accID']; ?>">
-                    <input type="submit" form="accUpdate" value="Update Account">
+                    <input class="submit" type="submit" form="accUpdate" value="Update Account">
                   </div>
                   <div class="formitem">
-                    <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
+                    <input class="cancel" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
                   </div>
                 </form>
 

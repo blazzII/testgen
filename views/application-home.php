@@ -5,21 +5,21 @@
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
+      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
       <main>
-        <h2>Test Review</h2>
- 
-        
+
+        <h2>Welcome</h2>
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
         
-        <?php echo $testdetails; ?>
-        
-       
-        <div class="formitem">
-          <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="Close">
-        </div>
+        <form action="/testgen/tests/" method="post">
+          <input class="menubutton" type="submit" value="Take a Test">
+          <input type="hidden" name="action" value="testSelectView">
+        </form>  
+
       </main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
     </div>
+
   </body>
 </html>
+<?php unset($_SESSION['message']); ?>

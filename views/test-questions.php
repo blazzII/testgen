@@ -11,12 +11,12 @@
             <hr>
             <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
             <div class="clearfix"></div>
-            <?php echo $testQuestions; ?>
+              <?php echo $testQuestions; ?>
             <br>
             <hr>
             <form action="/testgen/tests/" method="post">
               <div class="formitem">
-                <input type="email" placeholder="Enter Pilot Email" size="40" name="pilotemail" required>
+                <input type="email" placeholder="Enter Pilot Email" size="40" name="pilotEmail" required>
                 <input type="hidden" name="testID" value="<?php echo $testID ?>">
               </div>  
               <div class="formitem">
@@ -24,7 +24,7 @@
                 <input type="hidden" name="action" value="emailTest">
               </div>
               <div class="formitem">
-                <input class="smaller" type="button" onclick="location.href='../tests/?action=viewAllTestsByAccount'" value="Cancel">
+                <input class="cancel" type="button" onclick="location.href='../tests/?action=viewAllTestsByAccount'" value="Cancel">
               </div>
             </form>
             

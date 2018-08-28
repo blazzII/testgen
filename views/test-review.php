@@ -11,15 +11,18 @@
  
         
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
-        <form>
+        <form action="/testgen/tests/" method="post">
           <?php echo $markup; ?>
           <div class="formitem">
-            <input type="hidden" name="testID" value="'.$testID.'">
+            <input type="hidden" name="testID" value="<?php echo $testID ?>">
             <input type="hidden" name="action" value="addReviewNotes">
-            <input type="submit">
+            <input class="submit" type="submit" value="Record Evaluator Notes">
           </div>   
           <div class="formitem">
-            <input class="smaller" type="button" onclick="location.href='/testgen/accounts?action=accountView'" value="Close">
+            <input class="button" type="button" onclick="location.href='./?action=printView'" value="Print">
+          </div>
+          <div class="formitem">
+            <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="Close">
           </div>
         </form>
       </main>

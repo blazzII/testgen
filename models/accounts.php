@@ -35,6 +35,18 @@ function checkExistingEmail($accountEmail) {
     }
 }
 
+// Get account information based on account id
+function getAccount($accID){
+    $db = testgenConnect();
+    $sql = 'SELECT * FROM account WHERE accID = :accID';
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':accID', $accID, PDO::PARAM_INT);
+    $stmt->execute();
+    $accountData = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $accountData;
+} 
+
 // Get account information based on an email address
 function getAccountByEmail($accountEmail){
     $db = testgenConnect();

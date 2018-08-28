@@ -10,7 +10,7 @@ function buildCatList() {
 }
 
 function buildFormItemCategories() {
-    $numOfValues = 5; // maximum question count per category
+    $numOfValues = 10; // maximum question count per category
     $categories = getAllCategories();
     $formItems = "";
     foreach ($categories as $category) 

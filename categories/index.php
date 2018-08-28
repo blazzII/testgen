@@ -38,10 +38,28 @@ switch ($action) {
         break;
 
     case 'addCategory':   
-        $pageTitle = 'Category Added';
-        include '../views/.php';
-        break;
+        $catName = filter_input(INPUT_POST, 'catName', FILTER_SANITIZE_STRING);    
+
+        if(empty($catName)){
+            $message = '<div class="msg warn">Please provide a valid category name.</div>';
+            include '../views/category-create.php';
+            exit; 
+        }
+         
+        $categoryAdded = addCategory($catName);
     
+        // check for success
+        if($categoryAdded > 0) {
+            $_SESSION['message'] = '<div class="msg good">The category was successfully added.</div>';
+            header("Location: ./?action=viewAllCategories");
+            exit;
+        } else {
+            $message = '<div class="msg warn">Sorry, the category failed to be added.</div>';
+            include '../views/question-create.php';
+            exit;
+        }  
+        break;
+        
     default:
       echo "Model Error: Categories";
       break;

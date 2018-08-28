@@ -16,7 +16,10 @@ $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
     }
 
 switch ($action) {
-    
+    case 'home':
+        $pageTitle = 'Home';
+        include '../views/application-home.php';
+        break;
     case 'loginView':
         $pageTitle = 'Login';
         include '../views/account-login.php';
@@ -112,6 +115,7 @@ switch ($action) {
         exit;
 
     case 'accountView':
+      if ($_SESSION['loggedin']) {
         $accLevelText = getAccountLevelText($_SESSION['accountData']['accLevel']);
         $testCount = getTestsTakenCount($_SESSION['accountData']['accID']);
         $tests = getAllTestsCreated($_SESSION['accountData']['accID']);
@@ -119,8 +123,13 @@ switch ($action) {
         $pageTitle = 'My Account View';
         include '../views/account-menu.php';
         exit;
+      }
+      $pageTitle = 'Login';
+      include '../views/account-login.php';
+      break;
 
-    case 'getAccountsView': // A list of account - based on account level 
+    // get a list of accounts based upon account level -   
+    case 'getAccountsView':  
         $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
         if ($accLevel == NULL) {
             $accLevel = filter_input(INPUT_GET, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
@@ -145,8 +154,8 @@ switch ($action) {
         }
         foreach ($accounts as $account) {
             
-            $editaccounturl = '../accounts?action=updateAccountView&accID=' . $account["accID"];
-            $deleteaccounturl = '../accounts?action=deleteAccountView&accID=' . $account["accID"];
+            $editaccounturl = './?action=updateAccountView&accID=' . $account["accID"];
+            $deleteaccounturl = './?action=deleteAccountView&accID=' . $account["accID"];
             $markup .= '<tr>
                         <td>' . $account['accFirstName'] . '</td>
                         <td>' . $account['accLastName'] . '</td>
@@ -171,7 +180,7 @@ switch ($action) {
             exit;
         }
         $account = getAccountByID($accID);
-        $accLevelText = getAccountLevelText($_SESSION['accountData']['accLevel']);
+        $accLevelText = getAccountLevelText($account['accLevel']);
         $_SESSION['navAccLevel'] = $account['accLevel'];
         $pageTitle = 'Update Account Settings';
         include '../views/account-settings.php';
@@ -183,17 +192,24 @@ switch ($action) {
         $accFirstName = filter_input(INPUT_POST, 'accFirstName', FILTER_SANITIZE_STRING);
         $accLastName = filter_input(INPUT_POST, 'accLastName', FILTER_SANITIZE_STRING);
         $accEmail = filter_input(INPUT_POST, 'accEmail', FILTER_SANITIZE_EMAIL);
-        $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+        if ($_SESSION['accountData']['accLevel'] == 3) { 
+            $accLevel = filter_input(INPUT_POST, 'accLevel', FILTER_SANITIZE_NUMBER_INT);
+        } else {
+            $accLevel = $_SESSION['accountData']['accLevel'];
+        }
 
         // Check for missing data
-        if(empty($accFirstName) || empty($accLastName) || empty($accEmail) || empty($accLevel)){
+        if(empty($accFirstName) || empty($accLastName) || empty($accEmail) || empty($accLevel)) {
             $message = '<div class="msg warn">Please provide information for all empty form fields.</div>';
+            $account = getAccountByID($_SESSION['accountData']['accID']);
+            $accLevelText = getAccountLevelText($_SESSION['navAccLevel']);
             include '../views/account-settings.php';
             exit; 
         }
 
         // Send the data to the model
         $updateResult = updateAccount($accID, $accFirstName, $accLastName, $accEmail, $accLevel);
+
 
         // Check and report the result
         if ($updateResult === 1) {
