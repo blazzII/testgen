@@ -1,15 +1,15 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php';?>
+    <?php include '../shared/head.php';?>
   </head>
   <body>
     <div class="flex-container">
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php';?>
+        <?php include '../shared/header.php';?>
         <main>
             <h2>Delete this Account?</h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
+            <?php include '../shared/messagecheck.php';?>
             
             <div class="infocolumn">
               <span class="bolder">First Name:</span> <?php echo $account['accFirstName']; ?><br>
@@ -29,7 +29,7 @@
             </div>
 
             <hr>
-            <form action="/testgen/accounts/" method="post">
+            <form action="../accounts/" method="post">
               <div class="menuitem">
                 <input type="hidden" name="action" value="deleteAccount">
                 <input type="hidden" name="accID" value="<?php echo $account['accID'] ?>">
@@ -40,7 +40,7 @@
 
           </div>
         </main>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php';?>
+        <?php include '../shared/footer.php';?>
     </div>
   </body>
 </html>

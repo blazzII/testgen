@@ -417,9 +417,10 @@ tr:nth-child(even) {
     color: rgba(30, 30, 135, 1);
 }
 
+
 .printdiv {
-    margin: 5px;
-    padding: 7px;
+    margin: 4px;
+    padding: 5px;
     border: 1px solid rgba(27, 31, 35, 0.15);
     background-color: #ddd;
 }

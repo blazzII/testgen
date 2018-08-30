@@ -10,8 +10,7 @@ require_once '../models/testquestions.php';
 require_once '../models/accounts.php';
 require_once '../library/functions.php';
 
-// clear session message
-$_SESSION['message'] = NULL;
+
 
 // action sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
@@ -43,6 +42,7 @@ switch ($action) {
         }
 
         if ($createTest === 1) {
+            $_SESSION['message'] = NULL;
             $testID = buildRandomTestID(); 
             $result = addNewTest($testID, $_SESSION['accountData']['accID']);
             if ($result === 1) {
@@ -143,8 +143,10 @@ switch ($action) {
     
     
     case 'submitTest':
+        $_SESSION['message'] = NULL;    
         // Check if the client is set with accID
         // If the client not set then create a new account with the DEFAULT password
+
         if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
             $accountFirstName = filter_input(INPUT_POST, 'accountFirstName', FILTER_SANITIZE_STRING);
             $accountLastName = filter_input(INPUT_POST, 'accountLastName', FILTER_SANITIZE_STRING);
@@ -202,7 +204,7 @@ switch ($action) {
         $pilotEmail = filter_input(INPUT_POST, 'pilotEmail', FILTER_SANITIZE_EMAIL);
         $pilotEmail = checkEmail($pilotEmail);
         $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
-
+        $_SESSION['message'] = NULL;
         if(empty($pilotEmail)){
             $_SESSION['message'] = '<div class="msg warn">Please provide a valid email address.</div>';
             header ('location: ./?action=evaluatorTestQuestionsView&testID=' . $testID);  
@@ -227,6 +229,7 @@ switch ($action) {
         $tests = getAllTestsByPilot($_SESSION['accountData']['accID']);
         
         if (count($tests) < 1) {
+          $_SESSION['message'] = NULL;
           $_SESSION['message'] = '<div class="msg warn">There are no tests registered under your account.</div>';
           header ('location:../accounts/?action=accountView');
           exit; 
@@ -303,7 +306,7 @@ switch ($action) {
                        <small> &nbsp;[' . $answer['catName'] . ']</small>
                        <p class="msg warn">' . $answer['testquestionAnswer'] . '</p>
                        <p class="msg good">' . $answer['qAnswerKey'] . '</p>
-                       <p class="indent20"><textarea name="eval'. $answer['qID'] . '" cols="70" rows="4" placeholder="Notes">'. $answer['testquestionEvalNotes'] . '</textarea></p>
+                       <p class="indent20"><textarea name="eval'. $answer['testquestionID'] . '" cols="70" rows="4" placeholder="Notes">'. $answer['testquestionEvalNotes'] . '</textarea></p>
                        </div>';  
                 $qNum++;
             }
@@ -313,6 +316,7 @@ switch ($action) {
         break;
         
     case 'addReviewNotes':
+        $_SESSION['message'] = NULL;    
         $testID = filter_input(INPUT_POST, 'testID', FILTER_SANITIZE_STRING);
         $writeReviewFlag = FALSE;
 
@@ -322,6 +326,7 @@ switch ($action) {
                     $testquestionID = substr($testquestionID,4);
                     $recordAdded = recordEvalNotes($testquestionID, $value);  
                     if ($recordAdded != 1) {
+                        // clear session message
                         $_SESSION['message'] = '<div class="msg warn">There was a problem writing your review notes to the database.</div>';
                         header ('location: ./?action=testEvaluation&testID='.$testID);
                         exit;
@@ -331,29 +336,43 @@ switch ($action) {
                 }
             }
         }
-        if ($writeReviewFlag) {
-          $questions = getTestTakenDetails($testID);
-          $qNum = 1;
-          $markup = '<section>';
-          $markup .= '<h3>' . $testID . ' &nbsp;&nbsp;|&nbsp;&nbsp; ' . $questions[1]['accFirstName'] . ' ' . $questions[1]['accLastName'] . ' &nbsp;&nbsp;|&nbsp;&nbsp; ' . date('j M Y', strtotime($questions[1]['testquestionDateSubmitted'])) . '</h3>';
-          foreach ($questions as $question) {
-            $markup .= '<div>
-                       ' . $qNum . '. <strong>' . $question['qQuestion'] . '</strong>
-                       <small> &nbsp;[' . $question['catName'] . ']</small>
-                       <p class="printdiv">' . $question['testquestionAnswer'] . '</p>
-                       <p class="printdiv">' . $question['qAnswerKey'] . '</p>
-                       <p class="printdiv">' . $question['testquestionEvalNotes'] . '</p> 
-                       </div>';  
-                $qNum++;
-            }
-          $markup .= '</section>';        
-          $_SESSION['message'] = '<div class="msg good">Your answers were recorded.</div>';
+
+        if ($writeReviewFlag) {  
+            $_SESSION['message'] = '<div class="msg good">Your review notes were recorded.</div>';
+            header ('location: ./?action=printTestReview&testID=' .$testID);
+            exit;
         } else {
             $markup = "";
-            $_SESSION['message'] = '<div class="msg warn">Your answers were not recorded.</div>';
+            $_SESSION['message'] = '<div class="msg warn">Your review notes were not recorded.</div>';
+            $pageTitle = 'Test Review';
+            include '../views/test-review-print.php';
+            exit;
         }
-        $pageTitle = 'Print Recorded Test Review';
+        $pageTitle = 'Print Test Review';
         include '../views/test-review-print.php';
+        break;
+    
+    case 'printTestReview':  
+        $testID = filter_input(INPUT_GET, 'testID', FILTER_SANITIZE_STRING);
+        $questions = getTestTakenDetails($testID);
+        $qNum = 1;
+        $markup = '<h3>' . $questions[1]['accFirstName'] . ' ' . $questions[1]['accLastName'] . ' &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ' . date('j M Y', strtotime($questions[1]['testquestionDateSubmitted'])) . ' &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Test ID: ' . $testID . '</h3><hr>';
+        foreach ($questions as $question) {
+            $markup .= '<div>'
+                    . $qNum . '. <strong>' . $question['qQuestion'] . '</strong>
+                    <small> <br> &nbsp;&nbsp; ' . $question['catName'] . '</small>
+                    <p class="printdiv">"' . $question['testquestionAnswer'] . '"</p>
+                    <p class="printdiv">Key: ' . $question['qAnswerKey'] . '</p>
+                    <p class="printdiv"><em><small>Notes: ' . $question['testquestionEvalNotes'] . '</small></em></p> 
+                    </div><hr>';  
+            $qNum++;
+        }
+        $pageTitle = 'Test Review: ' . $questions[1]['accLastName'] . '  ' . $testID;
+        include '../views/test-review-print.php';
+        break;
+    
+    // print view - minimal output and HTML
+    case 'printView':
         break;
     
     default:

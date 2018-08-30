@@ -1,15 +1,15 @@
 <!doctype html>
 <html class="no-js" lang="">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
+        <?php include '../shared/header.php'; ?>
         <main>
             <h2>Update Account Settings</h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+            <?php include '../shared/messagecheck.php'; ?>
             
             <div class="infocolumn">
               <span class="bolder">First Name:</span> <?php echo $account['accFirstName']; ?><br>  
@@ -22,7 +22,7 @@
             <hr>
             <div class="sub-container">
 
-                <form action="/testgen/accounts/" method="post" id="accUpdate">
+                <form action="../accounts/" method="post" id="accUpdate">
                   <div class="formitem">
                     <label for="accFirstName">First Name:</label>
                     <input type="text" name="accFirstName" required  value="<?php echo $account['accFirstName']; ?>">
@@ -57,7 +57,7 @@
               
           </div>  
         </main>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+        <?php include '../shared/footer.php'; ?>
     </div>
   </body>
 </html>

@@ -2,18 +2,18 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
+      <?php include '../shared/header.php'; ?>   
       <main>
         <h2>Enter a Test Code</h2>
         <hr>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
-        <form action="/testgen/tests/" method="post"> 
+        <?php include '../shared/messagecheck.php'; ?>
+        <form action="../tests/" method="post"> 
           <div class="formitem">
-            <input type="text" placeholder="Enter a Test Code" name="testID" id="testID" max-length="20" required>
+            <input type="text" name="testID" id="testID" max-length="20" required>
           </div>           
           <hr>
           <div class="formitem">
@@ -26,7 +26,7 @@
         </form>
       </main>
     
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+      <?php include '../shared/footer.php'; ?>
     </div>
 
   </body>

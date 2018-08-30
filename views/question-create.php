@@ -1,16 +1,16 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
+      <?php include '../shared/header.php'; ?>
       <main>
-        <form action="/testgen/questions/" method="post">
+        <form action="../questions/" method="post">
             <h2>Add a New Question</h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+            <?php include '../shared/messagecheck.php'; ?>
             <div class="formitem">
               <label for="qQuestion"><strong>Question Category</strong></label><br>
               <?php echo $categoryList; ?>
@@ -43,7 +43,7 @@
             </div>
         </form>
       </main>
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+      <?php include '../shared/footer.php'; ?>
     </div>
   </body>
 </html>

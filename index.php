@@ -8,12 +8,12 @@
   }
   switch ($_SESSION['loggedin']) {
     case TRUE:
-      header ('Location: /testgen/accounts/?action=accountView');
+      header ('Location: ./accounts/?action=accountView');
       break;
     case FALSE:
-      header ('Location: /testgen/accounts/?action=home');
+      header ('Location: ./accounts/?action=home');
       break;
     default:
-      header ('Location: /testgen/accounts/?action=home');
+      header ('Location: ./accounts/?action=home');
       break;
   }

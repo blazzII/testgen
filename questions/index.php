@@ -181,7 +181,7 @@ switch ($action) {
         if($updateResult === 1) {
             $message = '<div class="msg good">The question was successfully updated.</div>';
             $pageTitle = 'Question View';
-            header("Location: /testgen/questions/?action=viewQuestion&qID=$qID");
+            header("Location: ./?action=viewQuestion&qID=$qID");
             exit;
         } else {
             $message = '<div class="msg warn">Sorry, the question failed to update.</div>';

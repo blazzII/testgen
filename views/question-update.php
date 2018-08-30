@@ -1,16 +1,16 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
+      <?php include '../shared/header.php'; ?>
       <main>
-        <form action="/testgen/questions/" method="post">
+        <form action="../questions/" method="post">
             <h2>Edit Question</h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+            <?php include '../shared/messagecheck.php'; ?>
             <div class="formitem">
               <label for="qQuestion"><strong>Question Text</strong></label><br>
               <textarea name="qQuestion" id="qQuestion" required cols="70" rows="5"><?php if(isset($qQuestion)) {echo $qQuestion;} ?></textarea>
@@ -35,11 +35,11 @@
               <input class="submit" type="submit" value="Update Question">
             </div>
             <div class="formitem">
-              <input class="cancel" type="button" onclick="location.href='/testgen/questions?action=viewQuestionsByCategory?catID=<?php echo $catID ?>'" value="&#10008; Cancel">
+              <input class="cancel" type="button" onclick="location.href='../questions?action=viewQuestionsByCategory?catID=<?php echo $catID ?>'" value="&#10008; Cancel">
             </div>
         </form>
       </main>
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+      <?php include '../shared/footer.php'; ?>
     </div>
   </body>
 </html>

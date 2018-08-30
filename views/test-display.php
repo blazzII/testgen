@@ -1,17 +1,17 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>
+      <?php include '../shared/header.php'; ?>
       <main>
         
-        <form action="/testgen/tests/" method="post">
+        <form action="../tests/" method="post">
             <h2>Test: <?php echo $_SESSION['testID'] ?></h2>
             <hr>
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; 
+            <?php include '../shared/messagecheck.php'; 
             
             if (isset($_SESSION['loggedin'])) {
              if (!$_SESSION['loggedin']) { ?>
@@ -43,7 +43,7 @@
             </div>
         </form>
       </main>
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+      <?php include '../shared/footer.php'; ?>
     </div>
   </body>
 </html>

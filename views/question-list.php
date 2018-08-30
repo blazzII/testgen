@@ -1,16 +1,16 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php';?>
+    <?php include '../shared/head.php';?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php';?>
+      <?php include '../shared/header.php';?>
       <main>
         <h2>Questions</h2>
         <hr>
 
-        <form action="/testgen/questions/" method="post">
+        <form action="../questions/" method="post">
           <div>
             <select name="catID" required>
               <option disabled selected>Select a category ...</option>
@@ -25,7 +25,7 @@
         </form>
 
         <hr>
-          <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php';?>
+          <?php include '../shared/messagecheck.php';?>
 
           <?php echo $markup; ?>
           
@@ -35,7 +35,7 @@
           </div>
           <?php } ?>
       </main>
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php';?>
+      <?php include '../shared/footer.php';?>
     </div>
   </body>
 </html>

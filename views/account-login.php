@@ -1,17 +1,17 @@
 <!doctype html>
 <html class="no-js" lang="en-us">
   <head>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/head.php'; ?>
+    <?php include '../shared/head.php'; ?>
   </head>
   <body>
     <div class="flex-container">
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/header.php'; ?>   
+      <?php include '../shared/header.php'; ?>   
       <main>
         <h2>Login</h2>
         <hr>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/messagecheck.php'; ?>
+        <?php include '../shared/messagecheck.php'; ?>
 
-        <form action="/testgen/accounts/" method="post">    
+        <form action="../accounts/" method="post">    
           <div class="formitem">
             <input type="email" placeholder="Email" name="accountEmail" id="accountEmail" size="25" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
           </div>           
@@ -38,7 +38,7 @@
 
       </main>
       
-      <?php include $_SERVER['DOCUMENT_ROOT'] . '/testgen/shared/footer.php'; ?>
+      <?php include '../shared/footer.php'; ?>
     </div>
 
   </body>

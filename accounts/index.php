@@ -111,7 +111,7 @@ switch ($action) {
         session_destroy();
         $message = '<div class="msg warn center">You have been logged out.</div>';
         $pageTitle = 'Logout';
-        header ('Location: /testgen/');
+        header ('Location: ../');
         exit;
 
     case 'accountView':
