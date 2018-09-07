@@ -79,7 +79,6 @@ switch ($action) {
         if ($qID == NULL) {
             $qID = filter_input(INPUT_GET, 'qID', FILTER_SANITIZE_STRING);
         }
-
         $question = getQuestionByID($qID);
 
         ($question['qActive'] === '1') ? $background = 'class="qactive left"' : $background = 'class="qnotactive left"';
@@ -191,23 +190,38 @@ switch ($action) {
         break;
     
     case 'questionSummary':
+        $questionTotal = 0;
+        $questionTotalUse = 0;
         $categories = getAllCategories();
         $markup = '<table>';
-        $markup .= '<tr><th>Category Name</th><th>Total Questions</th><th>Questions Used</th>';
+        $markup .= '<tr><th>Category Name</th><th># Questions</th><th>Use in Tests</th>';
         foreach ($categories as $category) {
             $numofquestions = getQuestionCountByCategory($category['catID']);
             $questionusecount = getQuestionUseCountByCategory($category['catID']);
+            $questionTotal += $numofquestions;
+            $questionTotalUse += $questionusecount;
             $markup .= '<tr>
                          <td>' . $category['catName'] . '</td>
                          <td>' . $numofquestions . '</td>
                          <td>' . $questionusecount . '</td>
                        </tr>';
         }
+
+        $markup .= '</tbody>
+                    <tfoot>
+                     <tr>
+                      <th>Totals</th>
+                      <th>' . $questionTotal . '</th>
+                      <th>' . $questionTotalUse . '</th>
+                     </tr>
+                    </tfoot>
+                   </table>';
         $pageTitle = 'Question Use Summary';
         include '../views/question-summary.php';
         exit;
 
     default:
-      echo "Model Error: Questions - please report to developer";
+      $_SESSION['message'] = '<div class="msg warn">There was an error in the application navigation through questions.</div>';
+      header ('location: ../accounts/?action=accountView');
       break;
 }

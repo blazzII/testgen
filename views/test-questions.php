@@ -14,17 +14,17 @@
               <?php echo $testQuestions; ?>
             <br>
             <hr>
-            <form action="../tests/" method="post">
+            <form action="./" method="post">
               <div class="formitem">
                 <input type="email" placeholder="Enter Pilot Email" size="40" name="pilotEmail" required>
-                <input type="hidden" name="testID" value="<?php echo $testID ?>">
               </div>  
               <div class="formitem">
-                <input type="submit" value="Send Test Code">
+                <input type="hidden" name="testID" value="<?php echo $testID ?>">
                 <input type="hidden" name="action" value="emailTest">
+                <input type="submit" value="Send Test Code">
               </div>
               <div class="formitem">
-                <input class="cancel" type="button" onclick="location.href='../tests/?action=viewAllTestsByAccount'" value="Cancel">
+                <input class="cancel" type="button" onclick="location.href='./?action=viewAllTestsByAccount'" value="&#10008; Close">
               </div>
             </form>
             

@@ -109,8 +109,9 @@
     }
 
     function getRandomQuestions($catID, $numOfQuestions) {
+        $numOfQuestions = intval($numOfQuestions);
         $db = testgenConnect();
-        $sql = 'SELECT qID FROM question WHERE catID = :catID AND qActive = "1" ORDER BY RAND() LIMIT :numOfQuestions';
+        $sql = 'SELECT qID FROM question WHERE catID = :catID AND qActive = 1 ORDER BY RAND() LIMIT :numOfQuestions';
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':catID', $catID, PDO::PARAM_INT);
         $stmt->bindValue(':numOfQuestions', $numOfQuestions, PDO::PARAM_INT);

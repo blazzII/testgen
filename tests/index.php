@@ -10,16 +10,17 @@ require_once '../models/testquestions.php';
 require_once '../models/accounts.php';
 require_once '../library/functions.php';
 
-
-
 // action sanitize and use POST or GET
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 if ($action == NULL) {
   $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 }
 
+// ***** Main ACTION switch ***************************************
 switch ($action) {
+
     case 'createTestView':
+        $_SESSION['message'] = NULL;
         $pageTitle = 'Create a New Test';
         $formItems = buildFormItemCategories();
         include '../views/test-create.php';
@@ -88,7 +89,7 @@ switch ($action) {
         if (count($questions) < 1) {
             $message = '<div class="msg warn">The test ID '. $testID . ' does not have any questions assigned to it or does not exist!</div>';
             include '../views/test-select.php';
-        exit; 
+            exit; 
         }    
         $_SESSION['testID'] = $testID;
         $qNum = 1;  // displayed question number
@@ -212,13 +213,12 @@ switch ($action) {
         } 
 
         // Set Up Email
-        $subject = 'TestGen TestID';
-        $header = 'From';
-        $message = 'Please go to http://www.293testgenerator.com and use the following test identification code: ' . $testID;
-        $sentmail = mail($pilotEmail,$subject,$message,$header);
+        $subject = '293 Test Generator: Test Ready Notification';
+        $message = 'You have a training event coming up. A test has been generated for you. Please go to the following link http://www.293testgenerator.com/views/test-select.php and enter code ' . $testID . ' to retrieve your test. This test will be part of you 135.293(a) evaluation. Any blank answers will be marked wrong.';
+        $sentmail = mail($pilotEmail,$subject,$message);
         if ($sentmail) {
-            $message = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.';
-            include '../views/test-list.php';
+            $_SESSION['message'] = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.';
+            header ('location: ../accounts?action=accountView');
         } else {
             $message = '<div class="msg warn">There was an error while sending the e-mail';
             include '../views/test-questions.php';
@@ -376,6 +376,7 @@ switch ($action) {
         break;
     
     default:
-        header ('location:./');
+        $_SESSION['message'] = '<div class="msg warn">There was an error in the application navigation through tests.</div>';
+        header ('location: ../accounts/?action=accountView');
         break;
 }

@@ -13,7 +13,7 @@
           <input class="button" type="button" onclick="window.print()" value="Print">
         </div>   
         <div class="formitem">
-          <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="Close">
+          <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="&#10008; Close">
         </div>
       </main>
       <?php include '../shared/footer.php'; ?>

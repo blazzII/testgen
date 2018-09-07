@@ -39,7 +39,7 @@
               <input class="submit" type="submit">
             </div>
             <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="Cancel">
+              <input class="smaller" type="button" onclick="location.href='./?action=accountView'" value="&#10008; Cancel">
             </div>
         </form>
       </main>

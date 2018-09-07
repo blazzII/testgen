@@ -17,7 +17,7 @@
             <input class="submit" type="submit" value="Record Evaluator Notes">
           </div>   
           <div class="formitem">
-            <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="Close">
+            <input class="cancel" type="button" onclick="location.href='../accounts?action=accountView'" value="&#10008; Close">
           </div>
         </form>
       </main>

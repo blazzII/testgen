@@ -16,18 +16,21 @@ if ($action == NULL) {
 switch ($action) {
     case 'viewAllCategories':
         $categories = getAllCategories();
-
+        $questionTotal = 0;
         $markup = '<table>';
         $markup .= '<tr><th>ID</th><th>Category Name</th><th># of Questions</th>';
         foreach ($categories as $category) {
             $numofquestions = getQuestionCountByCategory($category['catID']);
+            $questionTotal += $numofquestions;
             $markup .= '<tr>
                          <td>' . $category['catID'] . '</td>
                          <td>' . $category['catName'] . '</td>
                          <td>' . $numofquestions . '</td>
                        </tr>';
         }
-        $markup .= '</tbody></table>';
+        $markup .= '</tbody>';
+        $markup .= '<tfoot><tr><th colspan="2" style="text-align: right">Total Questions: </th><th>' . $questionTotal . '</th></tr></tfoot>';
+        $markup .= '</table>';
         $pageTitle = 'Manage Categories';
         include '../views/category-list.php';
         break;
@@ -61,6 +64,7 @@ switch ($action) {
         break;
         
     default:
-      echo "Model Error: Categories";
-      break;
-}
+        $_SESSION['message'] = '<div class="msg warn">There was an error in the application navigation through categories.</div>';
+        header ('location: ../accounts/?action=accountView');
+        break;
+    }

@@ -47,7 +47,7 @@
               <input type="hidden" name="action" value="registration">
             </div>
             <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='../'" value="Cancel">
+              <input class="cancel" type="button" onclick="location.href='../'" value="&#10008; Cancel">
             </div>
         </form>
       </main>

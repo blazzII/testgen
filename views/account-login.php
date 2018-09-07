@@ -10,7 +10,6 @@
         <h2>Login</h2>
         <hr>
         <?php include '../shared/messagecheck.php'; ?>
-
         <form action="../accounts/" method="post">    
           <div class="formitem">
             <input type="email" placeholder="Email" name="accountEmail" id="accountEmail" size="25" required <?php if(isset($accountEmail)){echo "value='$accountEmail'";}  ?>>
@@ -24,7 +23,7 @@
             <!-- <a href="./?action=retrievePasswordView">&#9757; Forgot Your Password?</a> -->     
           </div>  
           <div class="formitem">
-              <input class="smaller" type="button" onclick="location.href='../'" value="Cancel">
+              <input class="cancel" type="button" onclick="location.href='../'" value="&#10008; Cancel">
           </div>
         </form>
         <br> 

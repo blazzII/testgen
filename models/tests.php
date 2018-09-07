@@ -18,7 +18,7 @@
     function getTestBytestID($testID) {
       $db = testgenConnect();
       $sql = 'SELECT q.qQuestion, tq.testquestionID, c.catName, q.qActive FROM test as t
-               INNER JOIN testQuestion as tq ON tq.testID = t.testID
+               INNER JOIN testquestion as tq ON tq.testID = t.testID
                INNER JOIN question as q ON q.qID = tq.questionID
                INNER JOIN category as c ON c.catID = q.catID
                WHERE t.testID = :testID';

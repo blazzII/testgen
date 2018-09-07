@@ -109,10 +109,10 @@ switch ($action) {
     case 'logout':
         session_unset(); 
         session_destroy();
-        $message = '<div class="msg warn center">You have been logged out.</div>';
-        $pageTitle = 'Logout';
-        header ('Location: ../');
-        exit;
+        session_start();
+        $_SESSION['message'] = '<div class="msg good">You have successfully logged out.</div>';
+        header ('location: ../?action=home');
+        break;
 
     case 'accountView':
       if ($_SESSION['loggedin']) {
