@@ -174,7 +174,12 @@ switch ($action) {
         exit;
 
     case 'updateAccountView':
+        
         $accID = filter_input(INPUT_POST, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        if ($accID == NULL) {
+            $accID = filter_input(INPUT_GET, 'accID', FILTER_SANITIZE_NUMBER_INT);
+        }
+        
         if (empty($accID) || $accID == null) {
             header ('location: ./?action=accountView');
             exit;

@@ -214,10 +214,16 @@ switch ($action) {
 
         // Set Up Email
         $subject = '293 Test Generator: Test Ready Notification';
+        $headers = array('From: testing@293testgenerator.com', 
+                         'Reply-To: mark.chmieleski@amrg.com',
+                         'X-Mailer: PHP/' . PHP_VERSION
+                        );
+        $headers = implode("\r\n", $headers);
         $message = 'You have a training event coming up. A test has been generated for you. Please go to the following link http://www.293testgenerator.com and enter code ' . $testID . ' to retrieve your test. This test will be part of you 135.293(a) evaluation. Any blank answers will be marked wrong.';
-        $sentmail = mail($pilotEmail,$subject,$message);
+        $from = '';
+        $sentmail = mail($pilotEmail,$subject, $message, $headers);
         if ($sentmail) {
-            $_SESSION['message'] = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.';
+            $_SESSION['message'] = '<div class="msg good">The test identification code of ' . $testID . ' was sent to the email address provided.</div>';
             header ('location: ../accounts?action=accountView');
         } else {
             $message = '<div class="msg warn">There was an error while sending the e-mail';
