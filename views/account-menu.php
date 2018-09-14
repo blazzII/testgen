@@ -71,7 +71,7 @@
                   <div class="menuitem">
                     <input type="hidden" name="action" value="getAccountsView">
                     <input type="hidden" name="accLevel" value="3">
-                    <input class="submit" type="submit" value="Adminstrators">
+                    <input class="submit" type="submit" value="Administrators">
                   </div>
                 </form>
                 <?php }} //end of second and firstblock ?>
